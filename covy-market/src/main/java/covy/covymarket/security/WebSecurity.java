@@ -15,13 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
 
-/**
- * <클래스 설명>
- *
- * @author : junni802
- * @date : 2025-02-20
- */
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -50,7 +43,7 @@ public class WebSecurity {
             .requestMatchers("/actuator/**").permitAll()  // ← 이걸 꼭 추가
             .requestMatchers(WHITE_LIST).permitAll()
             .requestMatchers(new IpAddressMatcher("127.0.0.1")).permitAll()
-            .requestMatchers("/user-service/users/**").permitAll()
+            .requestMatchers("/covy-market/users/**").permitAll()
             .anyRequest().denyAll()
         )
         .addFilter(getAuthentication());
