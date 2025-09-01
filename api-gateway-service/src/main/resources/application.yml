@@ -1,7 +1,3 @@
-spring:
-  application:
-    name: api-gateway-service
-
 server:
   port: 8000
 
@@ -9,3 +5,62 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+
+spring:
+  application:
+    name: api-gateway-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    stream:
+      username: guest
+      password: guest
+  cloud:
+    gateway:
+      default-filters:
+      #        - name: GlobalFilter
+      #          args:
+      #            baseMessage: spring Cloud Gateway Global Filter
+      #            preLogger: true
+      #            postLogger: true
+      #        - name: LoggingFilter
+      #          args:
+      #            baseMessage: Hi, there.
+      #            preLogger: true
+      #            postLogger: true
+      routes:
+        - id: covy-market
+          uri: lb://COVY-MARKET
+          predicates:
+            - Path=/covy-market/**
+#            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
+#        - id: covy-market
+#          uri: lb://COVY-MARKET
+#          predicates:
+#            - Path=/covy-market/users
+#            - Method=POST
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
+#        - id: covy-market
+#          uri: lb://COVY-MARKET
+#          predicates:
+#            - Path=/covy-market/actuator/**
+#            - Method=GET, POST
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
+
+
+#jwt:
+#  header: Authorization
+#  secret: a2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9==
+#  token_expiration_time: 86400000 # ttl (?)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace, busrefresh, info, metrics, prometheus
