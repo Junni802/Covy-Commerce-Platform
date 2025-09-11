@@ -9,12 +9,12 @@ eureka:
 spring:
   application:
     name: api-gateway-service
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    stream:
-      username: guest
-      password: guest
+  #  rabbitmq:
+  #    host: 127.0.0.1
+  #    port: 5672
+  #    stream:
+  #      username: guest
+  #      password: guest
   cloud:
     gateway:
       default-filters:
@@ -33,26 +33,33 @@ spring:
           uri: lb://COVY-MARKET
           predicates:
             - Path=/covy-market/**
-#            - Method=POST
+          #            - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
-#        - id: covy-market
-#          uri: lb://COVY-MARKET
-#          predicates:
-#            - Path=/covy-market/users
-#            - Method=POST
-#          filters:
-#            - RemoveRequestHeader=Cookie
-#            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
-#        - id: covy-market
-#          uri: lb://COVY-MARKET
-#          predicates:
-#            - Path=/covy-market/actuator/**
-#            - Method=GET, POST
-#          filters:
-#            - RemoveRequestHeader=Cookie
-#            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
+        - id: covy-market
+          uri: lb://COVY-MARKET
+          predicates:
+            - Path=/covy-market/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
+        - id: covy-market
+          uri: lb://COVY-MARKET
+          predicates:
+            - Path=/covy-market/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
+        - id: covy-goods
+          uri: lb://COVY-GOODS
+          predicates:
+            - Path=/covy-goods/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/covy-goods/(?<segment>.*), /$\{segment}
 
 
 #jwt:
