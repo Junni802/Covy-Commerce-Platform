@@ -1,4 +1,4 @@
-package covy.covygoods;
+package covy.covygoods.controller;
 
 import covy.covygoods.entity.CatalogEntity;
 import covy.covygoods.service.CatalogService;
