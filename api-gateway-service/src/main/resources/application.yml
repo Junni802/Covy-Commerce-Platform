@@ -60,6 +60,13 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/covy-goods/(?<segment>.*), /$\{segment}
+        - id: covy-order
+          uri: lb://COVY-ORDER
+          predicates:
+            - Path=/covy-order/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/covy-order/(?<segment>.*), /$\{segment}
 
 
 #jwt:
