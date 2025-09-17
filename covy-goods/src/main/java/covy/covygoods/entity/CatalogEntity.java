@@ -13,7 +13,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @Entity
-@Table(name = "catalog")
+@Table(name = "goods")
 public class CatalogEntity implements Serializable {
 
   @Id
