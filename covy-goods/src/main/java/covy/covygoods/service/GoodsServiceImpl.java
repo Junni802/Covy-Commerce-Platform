@@ -1,7 +1,7 @@
 package covy.covygoods.service;
 
 import covy.covygoods.entity.GoodsEntity;
-import covy.covygoods.repository.CatalogRepository;
+import covy.covygoods.repository.GoodsRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +17,17 @@ import org.springframework.stereotype.Service;
 @Data
 @Slf4j
 @Service
-public class CatalogServiceImpl implements CatalogService {
+public class GoodsServiceImpl implements GoodsService {
 
-  CatalogRepository catalogRepository;
+  GoodsRepository goodsRepository;
 
   @Autowired
-  public CatalogServiceImpl(CatalogRepository catalogRepository) {
-    this.catalogRepository = catalogRepository;
+  public GoodsServiceImpl(GoodsRepository goodsRepository) {
+    this.goodsRepository = goodsRepository;
   }
 
   @Override
   public Iterable<GoodsEntity> getAllCatalogs() {
-    return catalogRepository.findAll();
+    return goodsRepository.findAll();
   }
 }

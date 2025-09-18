@@ -1,16 +1,16 @@
 package covy.covygoods.controller;
 
 import covy.covygoods.entity.GoodsEntity;
-import covy.covygoods.repository.CatalogRepository;
+import covy.covygoods.repository.GoodsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CatalogControllerTest {
+class GoodsControllerTest {
 
   @Autowired
-  private CatalogRepository catalogRepository;
+  private GoodsRepository goodsRepository;
 
   @Test
   void test() {
@@ -20,7 +20,7 @@ class CatalogControllerTest {
       entity.setGoodsNm("초코에몽" + i);
       entity.setStock(100); // 초기 재고 임의 값
       entity.setUnitPrice(1500); // 임의 가격
-      catalogRepository.save(entity);
+      goodsRepository.save(entity);
     }
   }
 

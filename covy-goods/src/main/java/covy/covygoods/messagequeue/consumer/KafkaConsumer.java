@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import covy.covygoods.entity.GoodsEntity;
-import covy.covygoods.repository.CatalogRepository;
+import covy.covygoods.repository.GoodsRepository;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class KafkaConsumer {
-  CatalogRepository repository;
+  GoodsRepository repository;
 
   @Autowired
-  public KafkaConsumer(CatalogRepository repository) {
+  public KafkaConsumer(GoodsRepository repository) {
     this.repository = repository;
   }
 

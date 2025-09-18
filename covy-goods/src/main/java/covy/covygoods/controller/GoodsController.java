@@ -1,7 +1,7 @@
 package covy.covygoods.controller;
 
 import covy.covygoods.entity.GoodsEntity;
-import covy.covygoods.service.CatalogService;
+import covy.covygoods.service.GoodsService;
 import covy.covygoods.vo.ResponseCatalog;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/")
-public class CatalogController {
+public class GoodsController {
 
   Environment env;
-  CatalogService catalogService;
+  GoodsService goodsService;
 
   @Autowired
-  public CatalogController(Environment env, CatalogService catalogService) {
+  public GoodsController(Environment env, GoodsService goodsService) {
     this.env = env;
-    this.catalogService = catalogService;
+    this.goodsService = goodsService;
   }
 
   @GetMapping("/heath_check")
@@ -35,7 +35,7 @@ public class CatalogController {
 
   @GetMapping("/users")
   public ResponseEntity<List<ResponseCatalog>> getUsersAll() {
-    Iterable<GoodsEntity> userList = catalogService.getAllCatalogs();
+    Iterable<GoodsEntity> userList = goodsService.getAllCatalogs();
 
     List<ResponseCatalog> resut = new ArrayList<>();
     userList.forEach(v -> {
