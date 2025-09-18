@@ -1,6 +1,7 @@
 package covy.covygoods.repository;
 
 import covy.covygoods.entity.GoodsEntity;
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -11,4 +12,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface CatalogRepository extends CrudRepository<GoodsEntity, Long> {
   GoodsEntity findByGoodsCd(String goodsCd);
+
+  List<GoodsEntity> findByGoodsNmContaining(String keyword);
 }
