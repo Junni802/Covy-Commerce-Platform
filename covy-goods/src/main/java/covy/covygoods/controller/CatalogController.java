@@ -1,6 +1,6 @@
 package covy.covygoods.controller;
 
-import covy.covygoods.entity.CatalogEntity;
+import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.service.CatalogService;
 import covy.covygoods.vo.ResponseCatalog;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class CatalogController {
 
   @GetMapping("/users")
   public ResponseEntity<List<ResponseCatalog>> getUsersAll() {
-    Iterable<CatalogEntity> userList = catalogService.getAllCatalogs();
+    Iterable<GoodsEntity> userList = catalogService.getAllCatalogs();
 
     List<ResponseCatalog> resut = new ArrayList<>();
     userList.forEach(v -> {

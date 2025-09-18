@@ -8,8 +8,8 @@ import lombok.Data;
 @JsonInclude(Include.NON_NULL)
 public class ResponseCatalog {
 
-  private String productId;
-  private String productName;
+  private String goodsCd;
+  private String goodsNm;
   private Integer unitPrice;
   private Integer totalPrice;
   private Integer stock;

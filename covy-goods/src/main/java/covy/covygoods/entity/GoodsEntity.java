@@ -13,18 +13,18 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @Entity
-@Table(name = "goods")
-public class CatalogEntity implements Serializable {
+@Table(name = "covy_goods")
+public class GoodsEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(nullable = false, length = 120, unique = true)
-  private String productId;
+  private String goodsCd;
 
   @Column(nullable = false)
-  private String productName;
+  private String goodsNm;
 
   @Column(nullable = false)
   private Integer stock;
