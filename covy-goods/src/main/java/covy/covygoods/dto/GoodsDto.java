@@ -3,7 +3,7 @@ package covy.covygoods.dto;
 import lombok.Data;
 
 @Data
-public class CatalogDto {
+public class GoodsDto {
 
   private String goodsCd;
   private Integer qty;
