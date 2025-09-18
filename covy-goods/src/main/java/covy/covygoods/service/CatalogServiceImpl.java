@@ -1,6 +1,6 @@
 package covy.covygoods.service;
 
-import covy.covygoods.entity.CatalogEntity;
+import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.CatalogRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class CatalogServiceImpl implements CatalogService {
   }
 
   @Override
-  public Iterable<CatalogEntity> getAllCatalogs() {
+  public Iterable<GoodsEntity> getAllCatalogs() {
     return catalogRepository.findAll();
   }
 }

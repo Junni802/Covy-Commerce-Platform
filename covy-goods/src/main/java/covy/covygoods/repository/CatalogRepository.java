@@ -1,6 +1,6 @@
 package covy.covygoods.repository;
 
-import covy.covygoods.entity.CatalogEntity;
+import covy.covygoods.entity.GoodsEntity;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -9,6 +9,6 @@ import org.springframework.data.repository.CrudRepository;
  * @author : junni802
  * @date : 2025-02-25
  */
-public interface CatalogRepository extends CrudRepository<CatalogEntity, Long> {
-  CatalogEntity findByProductId(String productId);
+public interface CatalogRepository extends CrudRepository<GoodsEntity, Long> {
+  GoodsEntity findByGoodsCd(String goodsCd);
 }

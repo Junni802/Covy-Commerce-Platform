@@ -1,9 +1,9 @@
 package covy.covygoods.service;
 
-import covy.covygoods.entity.CatalogEntity;
+import covy.covygoods.entity.GoodsEntity;
 
 public interface CatalogService {
 
-  Iterable<CatalogEntity> getAllCatalogs();
+  Iterable<GoodsEntity> getAllCatalogs();
 
 }

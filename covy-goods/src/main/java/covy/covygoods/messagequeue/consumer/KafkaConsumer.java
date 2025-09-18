@@ -3,7 +3,7 @@ package covy.covygoods.messagequeue.consumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import covy.covygoods.entity.CatalogEntity;
+import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.CatalogRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class KafkaConsumer {
       ex.printStackTrace();
     }
 
-    CatalogEntity entity = repository.findByProductId((String)map.get("productId"));
+    GoodsEntity entity = repository.findByGoodsCd((String)map.get("goodsCd"));
     if (entity != null) {
       entity.setStock(entity.getStock() - (Integer) map.get("qty"));
       repository.save(entity);
