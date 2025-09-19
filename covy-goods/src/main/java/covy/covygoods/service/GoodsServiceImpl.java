@@ -27,7 +27,12 @@ public class GoodsServiceImpl implements GoodsService {
   }
 
   @Override
-  public Iterable<GoodsEntity> getAllCatalogs() {
+  public Iterable<GoodsEntity> getAllGoods() {
     return goodsRepository.findAll();
+  }
+
+  @Override
+  public Iterable<GoodsEntity> getgoods(String goodsNm) {
+    return goodsRepository.findByGoodsNmContaining(goodsNm);
   }
 }

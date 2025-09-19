@@ -4,6 +4,8 @@ import covy.covygoods.entity.GoodsEntity;
 
 public interface GoodsService {
 
-  Iterable<GoodsEntity> getAllCatalogs();
+  Iterable<GoodsEntity> getAllGoods();
+
+  Iterable<GoodsEntity> getgoods(String goodsNm);
 
 }

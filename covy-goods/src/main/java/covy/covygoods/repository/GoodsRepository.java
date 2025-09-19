@@ -13,5 +13,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface GoodsRepository extends CrudRepository<GoodsEntity, Long> {
   GoodsEntity findByGoodsCd(String goodsCd);
 
-  List<GoodsEntity> findByGoodsNmContaining(String keyword);
+  List<GoodsEntity> findByGoodsNmContaining(String goodsNm);
 }
