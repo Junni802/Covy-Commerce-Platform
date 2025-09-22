@@ -1,11 +1,12 @@
 package covy.covygoods.service;
 
+import covy.covygoods.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 
 public interface GoodsService {
 
   Iterable<GoodsEntity> getAllGoods();
 
-  Iterable<GoodsEntity> getgoods(String goodsNm);
+  Iterable<GoodsDocument> getgoods(String goodsNm);
 
 }
