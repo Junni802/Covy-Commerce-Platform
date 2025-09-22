@@ -1,7 +1,9 @@
 package covy.covygoods.service;
 
+import covy.covygoods.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.GoodsRepository;
+import covy.covygoods.repository.GoodsSearchRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,12 @@ import org.springframework.stereotype.Service;
 public class GoodsServiceImpl implements GoodsService {
 
   GoodsRepository goodsRepository;
+  GoodsSearchRepository goodsSearchRepository;
 
   @Autowired
-  public GoodsServiceImpl(GoodsRepository goodsRepository) {
+  public GoodsServiceImpl(GoodsRepository goodsRepository, GoodsSearchRepository goodsSearchRepository) {
     this.goodsRepository = goodsRepository;
+    this.goodsSearchRepository = goodsSearchRepository;
   }
 
   @Override
@@ -32,7 +36,7 @@ public class GoodsServiceImpl implements GoodsService {
   }
 
   @Override
-  public Iterable<GoodsEntity> getgoods(String goodsNm) {
-    return goodsRepository.findByGoodsNmContaining(goodsNm);
+  public Iterable<GoodsDocument> getgoods(String goodsNm) {
+    return goodsSearchRepository.findByGoodsNmContaining(goodsNm);
   }
 }

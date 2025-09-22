@@ -1,5 +1,6 @@
 package covy.covygoods.controller;
 
+import covy.covygoods.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.service.GoodsService;
 import covy.covygoods.vo.ResponseCatalog;
@@ -48,7 +49,7 @@ public class GoodsController {
 
   @GetMapping("/user/{goodsNm}")
   public ResponseEntity<List<ResponseCatalog>> getFindGoods(@PathVariable(name = "goodsNm") String goodsNm) {
-    Iterable<GoodsEntity> goodsList = goodsService.getgoods(goodsNm);
+    Iterable<GoodsDocument> goodsList = goodsService.getgoods(goodsNm);
 
     List<ResponseCatalog> resut = new ArrayList<>();
     goodsList.forEach(v -> {
