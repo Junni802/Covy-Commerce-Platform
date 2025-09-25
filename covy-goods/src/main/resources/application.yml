@@ -3,9 +3,7 @@ spring:
     name: covy-goods
 
   elasticsearch:
-    username:
-    password:
-    uris:
+    uris: localhost:9200
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect

@@ -3,17 +3,18 @@ package covy.covygoods.elastic.document;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
-@Data
-@Document(indexName = "goods") // 인덱스명
+@Document(indexName = "goods")
 public class GoodsDocument {
 
   @Id
   private String id;
 
-  private String goodsCd;
+  @Field(type = FieldType.Text, analyzer = "standard")
   private String goodsNm;
+
   private Integer stock;
   private Integer unitPrice;
-  private String createdAt;
 }
