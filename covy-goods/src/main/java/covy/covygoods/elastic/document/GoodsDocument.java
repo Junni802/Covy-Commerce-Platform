@@ -8,7 +8,6 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Document(indexName = "goods")
 public class GoodsDocument {
-
   @Id
   private String id;
 
@@ -16,5 +15,6 @@ public class GoodsDocument {
   private String goodsNm;
 
   private Integer stock;
+
   private Integer unitPrice;
 }
