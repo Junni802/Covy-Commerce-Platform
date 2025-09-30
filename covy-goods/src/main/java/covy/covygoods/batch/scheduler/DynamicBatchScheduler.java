@@ -19,8 +19,8 @@ public class DynamicBatchScheduler {
   private final JobLauncher jobLauncher;
   private final ApplicationContext applicationContext;
 
-  @Value("#{${batch.jobs}}")
-  private Map<String, String> jobCronMap; // jobs 이름 → cron expression
+  @Value("#{${batch.jobs:{}}}")
+  private Map<String, String> jobCronMap;
 
   @Scheduled(cron = "0 * * * * ?") // 매 분마다 스케줄 확인
   public void scheduleJobs() throws Exception {
