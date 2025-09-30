@@ -7,12 +7,9 @@ spring:
 
   batch:
     jobs:
-      goodsJob:
-        cron: "0 0 0 * * ?" # 매일 새벽 2시
-      orderJob:
-        cron: "0 30 2 * * ?" # 매일 새벽 2시 30분
-      paymentJob:
-        cron: "0 0 3 * * ?" # 매일 새벽 3시
+      goodsJob: "0 0 0 * * ?"
+      orderJob: "0 30 2 * * ?"
+      paymentJob: "0 0 3 * * ?"
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
