@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'me.champeau.jmh' version '0.7.3'
 }
 
 group = 'covy'
@@ -21,6 +22,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 ext {
@@ -45,9 +47,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 
-    /** Performance test */
-    testImplementation 'org.openjdk.jmh:jmh-core:1.42'
-    testAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.42'
+    testImplementation("org.openjdk.jmh:jmh-core:1.37")
+    testImplementation("org.openjdk.jmh:jmh-generator-annprocess:1.37")
 }
 
 dependencyManagement {
@@ -58,4 +59,8 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(org.gradle.api.tasks.bundling.Zip) {
+    zip64 = true
 }
