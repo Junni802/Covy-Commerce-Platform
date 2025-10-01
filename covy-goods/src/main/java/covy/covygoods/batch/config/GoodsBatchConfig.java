@@ -56,7 +56,7 @@ public class GoodsBatchConfig {
   public RepositoryItemWriter<GoodsDocument> goodsWriter() {
     RepositoryItemWriter<GoodsDocument> writer = new RepositoryItemWriter<>();
     writer.setRepository(goodsSearchRepository);
-    writer.setMethodName("save");
+    writer.setMethodName("saveAll");
     return writer;
   }
 
