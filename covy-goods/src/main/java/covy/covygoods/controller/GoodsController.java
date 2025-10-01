@@ -49,7 +49,7 @@ public class GoodsController {
 
   @GetMapping("/user/{goodsNm}")
   public ResponseEntity<List<ResponseCatalog>> getFindGoods(@PathVariable(name = "goodsNm") String goodsNm) {
-    List<GoodsDocument> goodsList = goodsService.getgoods(goodsNm);
+    Iterable<GoodsDocument> goodsList = goodsService.getgoods(goodsNm);
 
     List<ResponseCatalog> resut = new ArrayList<>();
     goodsList.forEach(v -> {
