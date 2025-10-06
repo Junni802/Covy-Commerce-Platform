@@ -9,4 +9,7 @@ public interface GoodsService {
 
   Iterable<GoodsDocument> getgoods(String goodsNm);
 
+  /* DB를 통한 상품 검색
+  Iterable<GoodsEntity> getgoods(String goodsNm);*/
+
 }
