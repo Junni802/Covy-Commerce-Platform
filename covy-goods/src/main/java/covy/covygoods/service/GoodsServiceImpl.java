@@ -39,4 +39,10 @@ public class GoodsServiceImpl implements GoodsService {
   public Iterable<GoodsDocument> getgoods(String goodsNm) {
     return goodsSearchRepository.findByGoodsNmContaining(goodsNm);
   }
+
+  /* DB를 통한 상품 검색
+  @Override
+  public Iterable<GoodsEntity> getgoods(String goodsNm) {
+    return goodsRepository.findByGoodsNmContaining(goodsNm);
+  }*/
 }

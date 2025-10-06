@@ -58,4 +58,17 @@ public class GoodsController {
 
     return ResponseEntity.status(HttpStatus.OK).body(resut);
   }
+
+  /* DB를 통한 상품 검색
+  @GetMapping("/user/{goodsNm}")
+  public ResponseEntity<List<ResponseCatalog>> getFindGoods(@PathVariable(name = "goodsNm") String goodsNm) {
+    Iterable<GoodsEntity> goodsList = goodsService.getgoods(goodsNm);
+
+    List<ResponseCatalog> resut = new ArrayList<>();
+    goodsList.forEach(v -> {
+      resut.add(new ModelMapper().map(v, ResponseCatalog.class));
+    });
+
+    return ResponseEntity.status(HttpStatus.OK).body(resut);
+  }*/
 }
