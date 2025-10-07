@@ -6,6 +6,12 @@ spring:
   application:
     name: covy-goods
 
+#  Redis Default 세팅
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
   elasticsearch:
     uris: localhost:9200
 
