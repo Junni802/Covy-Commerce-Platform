@@ -1,4 +1,4 @@
-package covy.covygoods.kafka;
+package covy.covygoods.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
