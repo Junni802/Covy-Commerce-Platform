@@ -4,9 +4,12 @@ import covy.covygoods.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.GoodsRepository;
 import covy.covygoods.repository.GoodsSearchRepository;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,11 +26,14 @@ public class GoodsServiceImpl implements GoodsService {
 
   GoodsRepository goodsRepository;
   GoodsSearchRepository goodsSearchRepository;
+  RedisTemplate<String, Object> redisTemplate;
 
   @Autowired
-  public GoodsServiceImpl(GoodsRepository goodsRepository, GoodsSearchRepository goodsSearchRepository) {
+  public GoodsServiceImpl(GoodsRepository goodsRepository, GoodsSearchRepository goodsSearchRepository
+    , RedisTemplate<String, Object> redisTemplate) {
     this.goodsRepository = goodsRepository;
     this.goodsSearchRepository = goodsSearchRepository;
+    this.redisTemplate = redisTemplate;
   }
 
   @Override
@@ -37,7 +43,15 @@ public class GoodsServiceImpl implements GoodsService {
 
   @Override
   public Iterable<GoodsDocument> getgoods(String goodsNm) {
-    return goodsSearchRepository.findByGoodsNmContaining(goodsNm);
+    String cacheKey = "search:" + goodsNm;
+    List<GoodsDocument> cached = (List<GoodsDocument>)  redisTemplate.opsForValue().get(cacheKey);
+    if (cached != null) {
+      return cached;
+    }
+
+    Iterable<GoodsDocument> result = goodsSearchRepository.findByGoodsNmContaining(goodsNm);
+    redisTemplate.opsForValue().set(cacheKey, result, 5, TimeUnit.MINUTES);
+    return result;
   }
 
   /* DB를 통한 상품 검색
