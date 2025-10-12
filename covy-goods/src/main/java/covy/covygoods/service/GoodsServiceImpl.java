@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -47,15 +50,16 @@ public class GoodsServiceImpl implements GoodsService {
   }
 
   @Override
-  public Iterable<GoodsDocument> getgoods(String goodsNm) {
+  public Iterable<GoodsDocument> getgoods(String goodsNm, Pageable pageable) {
     String cacheKey = "search:" + goodsNm;
     List<GoodsDocument> cached = (List<GoodsDocument>)  redisTemplate.opsForValue().get(cacheKey);
     if (cached != null) {
       return cached;
     }
 
-    Iterable<GoodsDocument> result = goodsSearchRepository.findByGoodsNmContaining(goodsNm);
-    redisTemplate.opsForValue().set(cacheKey, result, 5, TimeUnit.MINUTES);
+
+    Page<GoodsDocument> result = goodsSearchRepository.findByGoodsNmContaining(goodsNm, pageable);
+    redisTemplate.opsForValue().set(cacheKey, result.getContent(), 5, TimeUnit.MINUTES);
     return result;
   }
 
