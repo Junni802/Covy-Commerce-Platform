@@ -59,7 +59,7 @@ public class GoodsServiceImpl implements GoodsService {
 
 
     Page<GoodsDocument> result = goodsSearchRepository.findByGoodsNmContaining(goodsNm, pageable);
-    redisTemplate.opsForValue().set(cacheKey, result.getContent(), 5, TimeUnit.MINUTES);
+    redisTemplate.opsForValue().set(cacheKey, result.getContent(), 30, TimeUnit.MINUTES);
     return result;
   }
 
