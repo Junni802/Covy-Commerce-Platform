@@ -1,4 +1,4 @@
-package covy.covygoods.redis.config;
+package covy.covygoods.common.redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;

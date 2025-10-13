@@ -1,6 +1,6 @@
-package covy.covygoods.batch.config;
+package covy.covygoods.common.batch.config;
 
-import covy.covygoods.elastic.document.GoodsDocument;
+import covy.covygoods.common.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.GoodsSearchRepository;
 import jakarta.persistence.EntityManagerFactory;

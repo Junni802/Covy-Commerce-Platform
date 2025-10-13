@@ -1,6 +1,6 @@
 package covy.covygoods.service;
 
-import covy.covygoods.elastic.document.GoodsDocument;
+import covy.covygoods.common.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.GoodsRepository;
 import covy.covygoods.repository.GoodsSearchRepository;
@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;

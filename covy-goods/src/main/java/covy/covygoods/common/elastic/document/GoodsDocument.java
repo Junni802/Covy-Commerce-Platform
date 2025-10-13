@@ -1,4 +1,4 @@
-package covy.covygoods.elastic.document;
+package covy.covygoods.common.elastic.document;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

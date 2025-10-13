@@ -1,6 +1,6 @@
 package covy.covygoods;
 
-import covy.covygoods.batch.properties.BatchJobProperties;
+import covy.covygoods.common.batch.properties.BatchJobProperties;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

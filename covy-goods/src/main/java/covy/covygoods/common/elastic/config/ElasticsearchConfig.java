@@ -1,4 +1,4 @@
-package covy.covygoods.elastic.config;
+package covy.covygoods.common.elastic.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

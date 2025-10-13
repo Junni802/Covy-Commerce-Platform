@@ -1,6 +1,6 @@
 package covy.covygoods.controller;
 
-import covy.covygoods.elastic.document.GoodsDocument;
+import covy.covygoods.common.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.service.GoodsService;
 import covy.covygoods.vo.ResponseCatalog;

@@ -1,4 +1,4 @@
-package covy.covygoods.messagequeue.consumer;
+package covy.covygoods.common.messagequeue.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
