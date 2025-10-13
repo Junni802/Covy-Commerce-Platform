@@ -53,10 +53,13 @@ public class GoodsServiceImpl implements GoodsService {
   public Iterable<GoodsDocument> getgoods(String goodsNm, Pageable pageable) {
     String cacheKey = "search:" + goodsNm;
     List<GoodsDocument> cached = (List<GoodsDocument>)  redisTemplate.opsForValue().get(cacheKey);
+
+    // ✅ 1. 검색어 인기 카운트 증가
+    stringRedisTemplate.opsForZSet().incrementScore("popular:keywords", goodsNm, 1);
+
     if (cached != null) {
       return cached;
     }
-
 
     Page<GoodsDocument> result = goodsSearchRepository.findByGoodsNmContaining(goodsNm, pageable);
     redisTemplate.opsForValue().set(cacheKey, result.getContent(), 30, TimeUnit.MINUTES);
