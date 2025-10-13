@@ -1,4 +1,4 @@
-package covy.covygoods.batch.entity;
+package covy.covygoods.common.batch.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -1,4 +1,4 @@
-package covy.covygoods.batch.properties;
+package covy.covygoods.common.batch.properties;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;

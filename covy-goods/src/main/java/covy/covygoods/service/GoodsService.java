@@ -1,6 +1,6 @@
 package covy.covygoods.service;
 
-import covy.covygoods.elastic.document.GoodsDocument;
+import covy.covygoods.common.elastic.document.GoodsDocument;
 import covy.covygoods.entity.GoodsEntity;
 import java.util.List;
 import org.springframework.data.domain.Pageable;

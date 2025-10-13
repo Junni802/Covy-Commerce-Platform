@@ -1,6 +1,6 @@
-package covy.covygoods.batch.scheduler;
+package covy.covygoods.common.batch.scheduler;
 
-import covy.covygoods.batch.properties.BatchJobProperties;
+import covy.covygoods.common.batch.properties.BatchJobProperties;
 import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

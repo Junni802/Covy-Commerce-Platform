@@ -1,4 +1,4 @@
-package covy.covygoods.kafka.consumer;
+package covy.covygoods.common.kafka.consumer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package covy.covygoods.messagequeue.config;
+package covy.covygoods.common.messagequeue.config;
 
 import java.util.HashMap;
 import java.util.Map;
