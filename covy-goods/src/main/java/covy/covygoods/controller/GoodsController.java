@@ -67,6 +67,12 @@ public class GoodsController {
     return ResponseEntity.status(HttpStatus.OK).body(resut);
   }
 
+  @GetMapping("/top/keyword")
+  public ResponseEntity<List<String>> findTopKeywords() {
+
+    return ResponseEntity.status(HttpStatus.OK).body(goodsService.getTopKeywords(10));
+  }
+
   /* DB를 통한 상품 검색
   @GetMapping("/user/{goodsNm}")
   public ResponseEntity<List<ResponseCatalog>> getFindGoods(@PathVariable(name = "goodsNm") String goodsNm) {
