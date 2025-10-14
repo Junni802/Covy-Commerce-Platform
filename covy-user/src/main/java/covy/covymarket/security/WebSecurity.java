@@ -12,8 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.IpAddressMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,11 +20,9 @@ import org.springframework.security.web.util.matcher.IpAddressMatcher;
 public class WebSecurity {
 
   private static final String[] WHITE_LIST = {
-      "/users/**",
-      "/",
-      "/**",
-      "/actuator/**"
+      "/", "/actuator/**"
   };
+
   private final UserService userService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final ObjectPostProcessor<Object> objectPostProcessor;
@@ -34,36 +31,32 @@ public class WebSecurity {
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .headers((headers) ->
-            headers.frameOptions((frameOptions) -> frameOptions.sameOrigin())
-        )
-        .csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
-            .disable())
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/actuator/**").permitAll()  // ← 이걸 꼭 추가
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
             .requestMatchers(WHITE_LIST).permitAll()
-            .requestMatchers(new IpAddressMatcher("127.0.0.1")).permitAll()
-            .requestMatchers("/covy-market/users/**").permitAll()
-            .anyRequest().denyAll()
+            .anyRequest().authenticated()
         )
-        .addFilter(getAuthentication());
+        // 사용자 로그인 필터
+        .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        // 서비스 계정 JWT 검증 필터
+        .addFilterBefore(serviceAccountJwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
 
-  public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth)
-      throws Exception {
+  public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     return auth.build();
   }
 
-
-  private AuthenticationFilter getAuthentication() throws Exception {
-    AuthenticationManagerBuilder builder = new AuthenticationManagerBuilder(objectPostProcessor);
-    AuthenticationFilter authenticationFilter = new AuthenticationFilter(
-        authenticationManager(builder), userService, env);
-    return authenticationFilter;
+  @Bean
+  public AuthenticationFilter authenticationFilter() throws Exception {
+    return new AuthenticationFilter(authenticationManager(new AuthenticationManagerBuilder(objectPostProcessor)),
+        userService, env);
   }
 
-
+  @Bean
+  public ServiceAccountJwtFilter serviceAccountJwtFilter() {
+    return new ServiceAccountJwtFilter(env);
+  }
 }

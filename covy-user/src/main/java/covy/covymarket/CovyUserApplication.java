@@ -14,10 +14,10 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-public class CovyMarketApplication {
+public class CovyUserApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(CovyMarketApplication.class, args);
+    SpringApplication.run(CovyUserApplication.class, args);
   }
 
   @Bean
