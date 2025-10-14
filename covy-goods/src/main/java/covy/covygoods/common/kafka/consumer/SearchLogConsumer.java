@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@KafkaListener(topics = "search-log", groupId = "search-log-consumer")
+@KafkaListener(topics = "user-search-log", groupId = "search-log-consumer")
 public class SearchLogConsumer {
 
   private final StringRedisTemplate redisTemplate;

@@ -23,6 +23,6 @@ public class SearchLogProducer {
     payload.put("timestamp", System.currentTimeMillis());
 
     String message = new ObjectMapper().writeValueAsString(payload);
-    kafkaTemplate.send("search-log", message);
+    kafkaTemplate.send("user-search-log", message);
   }
 }
