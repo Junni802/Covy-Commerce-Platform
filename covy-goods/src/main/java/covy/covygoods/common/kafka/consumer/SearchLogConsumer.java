@@ -1,5 +1,9 @@
 package covy.covygoods.common.kafka.consumer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -16,10 +20,11 @@ public class SearchLogConsumer {
   private final StringRedisTemplate redisTemplate;
 
   @KafkaHandler
-  public void consume(String keyword) {
-    String redisKey = "popular:keywords";
+  public void consume(String message) throws JsonProcessingException {
+    Map<String, Object> logger = new ObjectMapper().readValue(message, new TypeReference<Map<String, Object>>() {});
+    String keyword = (String) logger.get("keyword");
 
-    // 검색어의 점수 증가 (오름차순 정렬을 위한 Zset)
+    String redisKey = "popular:keywords";
     redisTemplate.opsForZSet().incrementScore(redisKey, keyword, 1);
 
     log.info("Search keyword [{}] count incremented in Redis", keyword);
