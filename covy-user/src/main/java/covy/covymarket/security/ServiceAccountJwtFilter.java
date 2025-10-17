@@ -25,8 +25,17 @@ public class ServiceAccountJwtFilter extends OncePerRequestFilter {
       HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
 
+    String path = request.getRequestURI();
+
+    // ✅ 예외 경로(회원가입, 로그인 등)는 바로 통과시킴
+    if (isExcludedPath(path)) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     String header = request.getHeader("Authorization");
 
+    // ✅ JWT 토큰이 없는 경우 401
     if (header == null || !header.startsWith("Bearer ")) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
@@ -35,14 +44,24 @@ public class ServiceAccountJwtFilter extends OncePerRequestFilter {
     String token = header.replace("Bearer ", "");
 
     try {
+      // ✅ JWT 유효성 검증
       Jwts.parserBuilder()
           .setSigningKey(Keys.hmacShaKeyFor(serviceSecret.getBytes(StandardCharsets.UTF_8)))
           .build()
           .parseClaimsJws(token);
 
       filterChain.doFilter(request, response);
+
     } catch (Exception e) {
+      // ✅ JWT 파싱 실패 시 401 반환
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
   }
-}
+
+  private boolean isExcludedPath(String path) {
+    return path.startsWith("/covy-user/users")  // 회원가입
+        || path.startsWith("/covy-user/login")  // 로그인
+        || path.startsWith("/actuator")         // 헬스체크
+        || path.startsWith("/swagger");          // 문
+  }
+  }

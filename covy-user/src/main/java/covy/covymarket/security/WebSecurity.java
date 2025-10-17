@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +35,8 @@ public class WebSecurity {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(WHITE_LIST).permitAll()
+            .requestMatchers(new IpAddressMatcher("127.0.0.1")).permitAll()
+            .requestMatchers("/users/**").permitAll()
             .anyRequest().authenticated()
         )
         // 사용자 로그인 필터
