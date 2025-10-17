@@ -59,8 +59,8 @@ public class ServiceAccountJwtFilter extends OncePerRequestFilter {
   }
 
   private boolean isExcludedPath(String path) {
-    return path.startsWith("/covy-user/users")  // 회원가입
-        || path.startsWith("/covy-user/login")  // 로그인
+    return path.startsWith("/users")  // 회원가입
+        || path.startsWith("/login")  // 로그인
         || path.startsWith("/actuator")         // 헬스체크
         || path.startsWith("/swagger");          // 문
   }
