@@ -2,7 +2,9 @@ package covy.apigatewayservice.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
+import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -16,12 +18,18 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGatewayFilter.Config> {
 
   private final Environment env;
 
+  // Config 클래스 정의
   public static class Config {}
+
+  // 생성자에서 Config.class 명시
+  public JwtAuthGatewayFilter(Environment env) {
+    super(Config.class);
+    this.env = env;
+  }
 
   @Override
   public GatewayFilter apply(Config config) {
@@ -50,15 +58,22 @@ public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGa
 
   private Claims parseJwt(String jwt) {
     try {
-      return Jwts.parser()
+
+      return Jwts.parserBuilder()
           .setSigningKey(env.getProperty("jwt.secret"))
+          .build()
           .parseClaimsJws(jwt)
           .getBody();
-    } catch (Exception e) {
-      log.error("JWT 검증 실패: {}", e.getMessage());
+
+    } catch (io.jsonwebtoken.ExpiredJwtException e) {
+      log.error("JWT expired: {}", e.getMessage());
+      return null;
+    } catch (io.jsonwebtoken.JwtException e) {
+      log.error("JWT invalid: {}", e.getMessage());
       return null;
     }
   }
+
 
   private ServerHttpRequest addUserHeaders(ServerHttpRequest request, Claims claims) {
     return request.mutate()

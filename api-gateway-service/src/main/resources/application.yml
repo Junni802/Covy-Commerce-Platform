@@ -29,30 +29,30 @@ spring:
       #            preLogger: true
       #            postLogger: true
       routes:
-        - id: covy-market
-          uri: lb://COVY-MARKET
+        - id: covy-user
+          uri: lb://COVY-USER
           predicates:
-            - Path=/covy-market/**
+            - Path=/covy-user/**
           #            - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
-        - id: covy-market
-          uri: lb://COVY-MARKET
+            - RewritePath=/covy-user/(?<segment>.*), /$\{segment}
+        - id: covy-userㅋ
+          uri: lb://COVY-USER
           predicates:
-            - Path=/covy-market/users
+            - Path=/covy-user/users
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
-        - id: covy-market
-          uri: lb://COVY-MARKET
+            - RewritePath=/covy-user/(?<segment>.*), /$\{segment}
+        - id: covy-user
+          uri: lb://COVY-USER
           predicates:
-            - Path=/covy-market/actuator/**
+            - Path=/covy-user/actuator/**
             - Method=GET, POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/covy-market/(?<segment>.*), /$\{segment}
+            - RewritePath=/covy-user/(?<segment>.*), /$\{segment}
         - id: covy-goods
           uri: lb://COVY-GOODS
           predicates:
@@ -60,6 +60,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/covy-goods/(?<segment>.*), /$\{segment}
+            - JwtAuthGatewayFilter
         - id: covy-order
           uri: lb://COVY-ORDER
           predicates:
