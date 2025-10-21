@@ -28,6 +28,7 @@ public class WebSecurity {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final ObjectPostProcessor<Object> objectPostProcessor;
   private final Environment env;
+  private final JwtTokenProvider jwtTokenProvider;
 
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,9 +41,9 @@ public class WebSecurity {
             .anyRequest().authenticated()
         )
         // 사용자 로그인 필터
-        .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         // 서비스 계정 JWT 검증 필터
-        .addFilterBefore(serviceAccountJwtFilter(), UsernamePasswordAuthenticationFilter.class);
+//        .addFilterBefore(serviceAccountJwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
@@ -55,11 +56,11 @@ public class WebSecurity {
   @Bean
   public AuthenticationFilter authenticationFilter() throws Exception {
     return new AuthenticationFilter(authenticationManager(new AuthenticationManagerBuilder(objectPostProcessor)),
-        userService, env);
+        userService, env, jwtTokenProvider);
   }
 
-  @Bean
-  public ServiceAccountJwtFilter serviceAccountJwtFilter() {
-    return new ServiceAccountJwtFilter(env);
-  }
+//  @Bean
+//  public ServiceAccountJwtFilter serviceAccountJwtFilter() {
+//    return new ServiceAccountJwtFilter(env);
+//  }
 }
