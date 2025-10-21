@@ -1,5 +1,9 @@
 package covy.covycart.dto;
 
-public class CartRequest {
+import lombok.Data;
 
+@Data
+public class CartRequest {
+  private String productId;
+  private int quantity;
 }
