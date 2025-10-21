@@ -87,40 +87,4 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     refreshCookie.setMaxAge((int)(7 * 24 * 60 * 60));
     response.addCookie(refreshCookie);
   }
-
-//  @Override
-//  protected void successfulAuthentication(HttpServletRequest request,
-//      HttpServletResponse response,
-//      FilterChain chain,
-//      Authentication authResult) throws IOException {
-//
-//    String email = ((User) authResult.getPrincipal()).getUsername();
-//    UserDto userDetails = userService.getUserDetsByEmail(email);
-//
-//    // 1️⃣ Access Token (짧은 만료)
-//    String accessToken = Jwts.builder()
-//        .setSubject(userDetails.getUserId())
-////        .claim("role", userDetails.getRole()) // 필요 시 권한 포함
-//        .setIssuedAt(new Date())
-//        .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_MS))
-//        .signWith(SignatureAlgorithm.HS384, env.getProperty("jwt.secret"))
-//        .compact();
-//
-//    // 2️⃣ Refresh Token (긴 만료)
-//    String refreshToken = Jwts.builder()
-//        .setSubject(userDetails.getUserId())
-//        .setIssuedAt(new Date())
-//        .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_MS))
-//        .signWith(SignatureAlgorithm.HS384, env.getProperty("jwt.secret"))
-//        .compact();
-//
-//    // 3️⃣ 응답 JSON에 토큰 전달 (헤더 대신)
-//    Map<String, String> tokens = new HashMap<>();
-//    tokens.put("accessToken", accessToken);
-//    tokens.put("refreshToken", refreshToken);
-//
-//    response.setContentType("application/json");
-//    response.setCharacterEncoding("UTF-8");
-//    new ObjectMapper().writeValue(response.getWriter(), tokens);
-//  }
 }
