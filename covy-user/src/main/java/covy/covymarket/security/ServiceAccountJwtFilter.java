@@ -17,7 +17,7 @@ public class ServiceAccountJwtFilter extends OncePerRequestFilter {
   private final String serviceSecret;
 
   public ServiceAccountJwtFilter(Environment env) {
-    this.serviceSecret = env.getProperty("service.jwt.secret");
+    this.serviceSecret = env.getProperty("jwt.secret");
   }
 
   @Override
@@ -26,9 +26,10 @@ public class ServiceAccountJwtFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
 
     String path = request.getRequestURI();
+    String method = request.getMethod();
 
     // ✅ 예외 경로(회원가입, 로그인 등)는 바로 통과시킴
-    if (isExcludedPath(path)) {
+    if (isExcludedPath(path, method)) {
       filterChain.doFilter(request, response);
       return;
     }
@@ -42,6 +43,8 @@ public class ServiceAccountJwtFilter extends OncePerRequestFilter {
     }
 
     String token = header.replace("Bearer ", "");
+
+    System.out.println("serviceSecret = " + serviceSecret);
 
     try {
       // ✅ JWT 유효성 검증
@@ -58,8 +61,8 @@ public class ServiceAccountJwtFilter extends OncePerRequestFilter {
     }
   }
 
-  private boolean isExcludedPath(String path) {
-    return path.startsWith("/users")  // 회원가입
+  private boolean isExcludedPath(String path, String method) {
+    return (path.startsWith("/users") && "POST".equals(method))  // 회원가입
         || path.startsWith("/login")  // 로그인
         || path.startsWith("/actuator")         // 헬스체크
         || path.startsWith("/swagger");          // 문
