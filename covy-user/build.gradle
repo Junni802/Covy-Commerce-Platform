@@ -6,7 +6,7 @@ plugins {
 
 group = 'covy'
 version = '1.0'
-description = 'covy-market'
+description = 'covy-user'
 
 java {
     toolchain {
