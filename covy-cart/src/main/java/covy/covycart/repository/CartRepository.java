@@ -1,5 +1,23 @@
 package covy.covycart.repository;
 
-public class CartRepository {
+import covy.covycart.domain.Cart;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 
+@RequiredArgsConstructor
+public class CartRepository {
+  private final RedisTemplate<String, Object> redisTemplate;
+  private static final String CART_KEY_PREFIX = "cart:";
+
+  public void save(Cart cart) {
+    redisTemplate.opsForValue().set(CART_KEY_PREFIX + cart.getUserId(), cart);
+  }
+
+  public Cart findByUserId(String userId) {
+    return (Cart) redisTemplate.opsForValue().get(CART_KEY_PREFIX + userId);
+  }
+
+  public void delete(String userId) {
+    redisTemplate.delete(CART_KEY_PREFIX + userId);
+  }
 }

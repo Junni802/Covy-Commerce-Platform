@@ -1,5 +1,11 @@
 package covy.covycart.dto;
 
-public class CartResponse {
+import covy.covycart.domain.CartItem;
+import java.util.List;
+import lombok.Data;
 
+@Data
+public class CartResponse {
+  private String userId;
+  private List<CartItem> items;
 }
