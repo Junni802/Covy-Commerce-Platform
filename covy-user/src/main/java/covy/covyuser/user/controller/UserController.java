@@ -1,10 +1,10 @@
-package covy.covymarket.user.controller;
+package covy.covyuser.user.controller;
 
-import covy.covymarket.user.dto.UserDto;
-import covy.covymarket.user.entitiy.UserEntity;
-import covy.covymarket.user.service.UserService;
-import covy.covymarket.user.vo.RequestUser;
-import covy.covymarket.user.vo.ResponseUser;
+import covy.covyuser.user.dto.UserDto;
+import covy.covyuser.user.entitiy.UserEntity;
+import covy.covyuser.user.service.UserService;
+import covy.covyuser.user.vo.RequestUser;
+import covy.covyuser.user.vo.ResponseUser;
 import io.micrometer.core.annotation.Timed;
 import java.util.ArrayList;
 import java.util.List;

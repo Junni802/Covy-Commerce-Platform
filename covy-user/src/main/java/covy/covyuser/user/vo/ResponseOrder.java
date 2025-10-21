@@ -1,4 +1,4 @@
-package covy.covymarket.user.vo;
+package covy.covyuser.user.vo;
 
 import java.util.Date;
 import lombok.Data;

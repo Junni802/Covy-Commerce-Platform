@@ -1,4 +1,4 @@
-package covy.covymarket.user.entitiy;
+package covy.covyuser.user.entitiy;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

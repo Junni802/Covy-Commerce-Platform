@@ -1,4 +1,4 @@
-package covy.covymarket;
+package covy.covyuser;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;

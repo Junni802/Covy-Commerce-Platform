@@ -1,8 +1,8 @@
-package covy.covymarket.user.service;
+package covy.covyuser.user.service;
 
-import covy.covymarket.user.dto.UserDto;
-import covy.covymarket.user.entitiy.UserEntity;
-import covy.covymarket.user.repository.UserRepository;
+import covy.covyuser.user.dto.UserDto;
+import covy.covyuser.user.entitiy.UserEntity;
+import covy.covyuser.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.modelmapper.ModelMapper;
