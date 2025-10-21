@@ -55,13 +55,15 @@ public class GoodsController {
   public ResponseEntity<List<ResponseCatalog>> getFindGoods(@PathVariable(name = "goodsNm") String goodsNm,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "20") int size,
-      @RequestHeader(value = "X-User-Id", required = false) String userId) {
+      @RequestHeader(value = "X-User-Id", required = false) String id,
+      @RequestHeader(value = "X-User-Email", required = false) String email) {
 
     Pageable pageable = PageRequest.of(page, size);
     Iterable<GoodsDocument> goodsList = goodsService.getgoods(goodsNm, pageable);
 
 
-    String id = userId;
+    String userId = id;
+    String userEmail = email;
     List<ResponseCatalog> resut = new ArrayList<>();
     goodsList.forEach(v -> {
       resut.add(new ModelMapper().map(v, ResponseCatalog.class));
