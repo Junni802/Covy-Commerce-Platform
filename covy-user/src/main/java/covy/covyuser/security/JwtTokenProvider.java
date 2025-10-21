@@ -1,7 +1,7 @@
-package covy.covymarket.security;
+package covy.covyuser.security;
 
-import covy.covymarket.user.dto.UserDto;
-import covy.covymarket.user.repository.RefreshTokenRedisRepository;
+import covy.covyuser.user.dto.UserDto;
+import covy.covyuser.user.repository.RefreshTokenRedisRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,8 @@ public class JwtTokenProvider {
 
   public String generateAccessToken(UserDto user) {
     return Jwts.builder()
-        .setSubject(user.getUserId())
+        .claim("userId", user.getUserId())
+        .claim("email", user.getEmail())
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_MS))
         .signWith(SignatureAlgorithm.HS384, env.getProperty("jwt.secret"))
@@ -31,7 +32,8 @@ public class JwtTokenProvider {
 
   public String generateRefreshToken(UserDto user) {
     String refreshToken = Jwts.builder()
-        .setSubject(user.getUserId())
+        .claim("userId", user.getUserId())
+        .claim("email", user.getEmail())
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_MS))
         .signWith(SignatureAlgorithm.HS384, env.getProperty("jwt.secret"))

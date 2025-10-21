@@ -1,6 +1,6 @@
-package covy.covymarket.user.repository;
+package covy.covyuser.user.repository;
 
-import covy.covymarket.user.entitiy.UserEntity;
+import covy.covyuser.user.entitiy.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepository extends CrudRepository<UserEntity, Long> {

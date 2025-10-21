@@ -1,6 +1,6 @@
-package covy.covymarket.security;
+package covy.covyuser.security;
 
-import covy.covymarket.user.service.UserService;
+import covy.covyuser.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

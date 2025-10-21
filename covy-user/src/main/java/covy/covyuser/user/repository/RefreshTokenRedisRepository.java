@@ -1,4 +1,4 @@
-package covy.covymarket.user.repository;
+package covy.covyuser.user.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

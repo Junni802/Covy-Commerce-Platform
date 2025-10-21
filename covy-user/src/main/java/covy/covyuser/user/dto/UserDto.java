@@ -1,6 +1,6 @@
-package covy.covymarket.user.dto;
+package covy.covyuser.user.dto;
 
-import covy.covymarket.user.vo.ResponseOrder;
+import covy.covyuser.user.vo.ResponseOrder;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;

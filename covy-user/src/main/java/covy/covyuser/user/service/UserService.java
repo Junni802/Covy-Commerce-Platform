@@ -1,7 +1,7 @@
-package covy.covymarket.user.service;
+package covy.covyuser.user.service;
 
-import covy.covymarket.user.dto.UserDto;
-import covy.covymarket.user.entitiy.UserEntity;
+import covy.covyuser.user.dto.UserDto;
+import covy.covyuser.user.entitiy.UserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {

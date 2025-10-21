@@ -1,9 +1,9 @@
-package covy.covymarket.security;
+package covy.covyuser.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import covy.covymarket.user.dto.UserDto;
-import covy.covymarket.user.service.UserService;
-import covy.covymarket.user.vo.RequestLogin;
+import covy.covyuser.user.dto.UserDto;
+import covy.covyuser.user.service.UserService;
+import covy.covyuser.user.vo.RequestLogin;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
