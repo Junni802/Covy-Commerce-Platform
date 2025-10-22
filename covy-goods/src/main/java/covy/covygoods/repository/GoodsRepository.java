@@ -1,7 +1,10 @@
 package covy.covygoods.repository;
 
+import covy.covygoods.common.elastic.document.GoodsDocument;
+import covy.covygoods.dto.GoodsDto;
 import covy.covygoods.entity.GoodsEntity;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -11,7 +14,9 @@ import org.springframework.data.repository.CrudRepository;
  * @date : 2025-02-25
  */
 public interface GoodsRepository extends CrudRepository<GoodsEntity, Long> {
-  GoodsEntity findByGoodsCd(String goodsCd);
+  Optional<GoodsEntity> findByGoodsCd(String goodsCd);
+
+  GoodsDocument saveGoods(GoodsDto goods);
 
   List<GoodsEntity> findByGoodsNmContaining(String goodsNm);
 }
