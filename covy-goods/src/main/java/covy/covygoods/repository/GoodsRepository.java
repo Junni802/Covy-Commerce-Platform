@@ -16,7 +16,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface GoodsRepository extends CrudRepository<GoodsEntity, Long> {
   Optional<GoodsEntity> findByGoodsCd(String goodsCd);
 
-  GoodsDocument saveGoods(GoodsDto goods);
-
   List<GoodsEntity> findByGoodsNmContaining(String goodsNm);
 }
