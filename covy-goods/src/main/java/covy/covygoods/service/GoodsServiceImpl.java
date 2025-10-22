@@ -6,6 +6,7 @@ import covy.covygoods.repository.GoodsRepository;
 import covy.covygoods.repository.GoodsSearchRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
@@ -63,6 +64,11 @@ public class GoodsServiceImpl implements GoodsService {
     Page<GoodsDocument> result = goodsSearchRepository.findByGoodsNmContaining(goodsNm, pageable);
     redisTemplate.opsForValue().set(cacheKey, result.getContent(), 30, TimeUnit.MINUTES);
     return result;
+  }
+
+  @Override
+  public Optional<GoodsDocument> getGoodsCd(String goodsCd) {
+    return goodsSearchRepository.findByGoodsCd(goodsCd);
   }
 
   /* DB를 통한 상품 검색
