@@ -15,7 +15,7 @@ public interface GoodsService {
 
   Optional<GoodsEntity> getGoodsCd(String goodsCd);
 
-  GoodsDocument saveGoods(GoodsDto goods);
+  GoodsDocument saveGoods(GoodsEntity goods);
 
   /* DB를 통한 상품 검색
   Iterable<GoodsEntity> getgoods(String goodsNm);*/

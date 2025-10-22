@@ -72,14 +72,23 @@ public class GoodsServiceImpl implements GoodsService {
     return goodsRepository.findByGoodsCd(goodsCd);
   }
 
-  public GoodsDocument saveGoods(GoodsDto goods) {
+  public GoodsDocument saveGoods(GoodsEntity goods) {
     // 중복 확인
     goodsRepository.findByGoodsCd(goods.getGoodsCd())
         .ifPresent(existing -> {
           throw new IllegalArgumentException("이미 존재하는 상품 코드입니다: " + goods.getGoodsCd());
         });
 
-    return goodsRepository.saveGoods(goods);
+    // RDB 저장
+    goodsRepository.save(goods);
+
+    // Elastic 저장
+    GoodsDocument goodsDocument = new GoodsDocument();
+    goodsDocument.setGoodsNm(goods.getGoodsNm());
+    goodsDocument.setId(goods.getId().toString());
+    goodsDocument.setStock(goods.getStock());
+    goodsDocument.setUnitPrice(goods.getUnitPrice());
+    return goodsSearchRepository.save(goodsDocument);
   }
 
   /* DB를 통한 상품 검색
