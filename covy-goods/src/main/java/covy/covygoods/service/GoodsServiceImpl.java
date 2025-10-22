@@ -1,6 +1,7 @@
 package covy.covygoods.service;
 
 import covy.covygoods.common.elastic.document.GoodsDocument;
+import covy.covygoods.dto.GoodsDto;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.GoodsRepository;
 import covy.covygoods.repository.GoodsSearchRepository;
@@ -67,8 +68,18 @@ public class GoodsServiceImpl implements GoodsService {
   }
 
   @Override
-  public Optional<GoodsDocument> getGoodsCd(String goodsCd) {
-    return goodsSearchRepository.findByGoodsCd(goodsCd);
+  public Optional<GoodsEntity> getGoodsCd(String goodsCd) {
+    return goodsRepository.findByGoodsCd(goodsCd);
+  }
+
+  public GoodsDocument saveGoods(GoodsDto goods) {
+    // 중복 확인
+    goodsRepository.findByGoodsCd(goods.getGoodsCd())
+        .ifPresent(existing -> {
+          throw new IllegalArgumentException("이미 존재하는 상품 코드입니다: " + goods.getGoodsCd());
+        });
+
+    return goodsRepository.saveGoods(goods);
   }
 
   /* DB를 통한 상품 검색

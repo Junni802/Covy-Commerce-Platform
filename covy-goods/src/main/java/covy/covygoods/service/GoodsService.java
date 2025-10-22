@@ -1,6 +1,7 @@
 package covy.covygoods.service;
 
 import covy.covygoods.common.elastic.document.GoodsDocument;
+import covy.covygoods.dto.GoodsDto;
 import covy.covygoods.entity.GoodsEntity;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,9 @@ public interface GoodsService {
 
   Iterable<GoodsDocument> getgoods(String goodsNm, Pageable pageable);
 
-  Optional<GoodsDocument> getGoodsCd(String goodsCd);
+  Optional<GoodsEntity> getGoodsCd(String goodsCd);
+
+  GoodsDocument saveGoods(GoodsDto goods);
 
   /* DB를 통한 상품 검색
   Iterable<GoodsEntity> getgoods(String goodsNm);*/

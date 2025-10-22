@@ -7,6 +7,7 @@ import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.GoodsRepository;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -34,10 +35,10 @@ public class KafkaConsumer {
       ex.printStackTrace();
     }
 
-    GoodsEntity entity = repository.findByGoodsCd((String)map.get("goodsCd"));
-    if (entity != null) {
-      entity.setStock(entity.getStock() - (Integer) map.get("qty"));
-      repository.save(entity);
+    Optional<GoodsEntity> entity = repository.findByGoodsCd((String)map.get("goodsCd"));
+    if (!entity.isPresent()) {
+      entity.get().setStock(entity.get().getStock() - (Integer) map.get("qty"));
+      repository.save(entity.get());
     }
 
   }
