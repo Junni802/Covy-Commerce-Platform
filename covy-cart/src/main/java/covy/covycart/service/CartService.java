@@ -21,7 +21,7 @@ public class CartService {
 
     // 기존 아이템 있으면 수량 증가
     Optional<CartItem> existingItem = cart.getItems().stream()
-        .filter(i -> i.getProductId().equals(request.getProductId()))
+        .filter(i -> i.getGoodsCd().equals(request.getProductId()))
         .findFirst();
     if (existingItem.isPresent()) {
       existingItem.get().setQuantity(existingItem.get().getQuantity() + request.getQuantity());
@@ -42,7 +42,7 @@ public class CartService {
   public void removeItem(String userId, String productId) {
     Cart cart = cartRepository.findByUserId(userId);
     if (cart != null) {
-      cart.getItems().removeIf(i -> i.getProductId().equals(productId));
+      cart.getItems().removeIf(i -> i.getGoodsCd().equals(productId));
       cartRepository.save(cart);
     }
   }
