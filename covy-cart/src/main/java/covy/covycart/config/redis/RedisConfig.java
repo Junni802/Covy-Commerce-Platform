@@ -1,4 +1,4 @@
-package covy.covycart.config;
+package covy.covycart.config.redis;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
