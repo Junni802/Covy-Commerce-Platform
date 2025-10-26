@@ -30,7 +30,6 @@ repositories {
 
 dependencies {
     // Spring Boot
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // Spring Cloud
@@ -44,9 +43,29 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation "org.apache.flink:flink-streaming-java:1.20.0"
+    implementation "org.apache.flink:flink-clients:1.20.0"
+
+    // Kafka Connector
+    implementation("org.apache.flink:flink-connector-kafka:3.2.0-1.19")
+
+    // Redis (Jedis)
+    implementation "redis.clients:jedis:5.1.2"
+
+    // JSON 처리용
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.17.1"
+
+    // Elasticsearch High Level REST Client
+    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.13'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 }
 
 dependencyManagement {
