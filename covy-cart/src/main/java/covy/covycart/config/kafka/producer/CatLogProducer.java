@@ -2,6 +2,8 @@ package covy.covycart.config.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import covy.covycart.config.log.ActionType;
+import covy.covycart.config.log.UserActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +16,16 @@ public class CatLogProducer {
 
   private final KafkaTemplate<String, String> kafkaTemplate;
 
-  public void sendCartLogProducer(String userId, String goodsCd, String action)
+  public void sendCartLogProducer(String userId, String goodsCd, ActionType action)
       throws JsonProcessingException {
-    Map<String, Object> payload = new HashMap<>();
-    payload.put("userId", userId);
-    payload.put("goodsCd", goodsCd);
-    payload.put("action", action);
-    payload.put("timestamp", System.currentTimeMillis());
+    UserActionEvent userActionEvent = UserActionEvent.builder()
+        .userId(userId)
+        .goodsCd(goodsCd)
+        .actionType(action)
+        .timestamp(System.currentTimeMillis()).build();
 
-    String message = new ObjectMapper().writeValueAsString(payload);
-    kafkaTemplate.send("cart-event-log" ,message);
+    String message = new ObjectMapper().writeValueAsString(userActionEvent);
+    kafkaTemplate.send("cart-event-log", userId, message);
   }
 
 }
