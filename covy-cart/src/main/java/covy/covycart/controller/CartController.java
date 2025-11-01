@@ -20,7 +20,7 @@ public class CartController {
   private final CartService cartService;
 
   @PostMapping
-  public CartResponse addItem(
+  public void addItem(
       @RequestHeader("X-User-Id") String userId,
       @RequestBody CartRequest request) {
     return cartService.addItem(userId, request);
