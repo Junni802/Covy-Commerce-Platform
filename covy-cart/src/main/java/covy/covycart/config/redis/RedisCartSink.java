@@ -18,11 +18,23 @@ public class RedisCartSink extends RichSinkFunction<UserActionEvent> {
   }
 
   @Override
-  public void invoke(UserActionEvent value, Context context) {
-    if (jedis != null) {
-      String key = "user:" + value.getUserId() + ":cart";
-      String field = value.getGoodsCd();
-      jedis.hincrBy(key, field, 1);
+  public void invoke(UserActionEvent event, Context context) {
+    String key = "user:" + event.getUserId() + ":cart";
+    String field = event.getGoodsCd();
+
+    switch (event.getActionType()) {
+      case ADD_TO_CATRT:
+        // 이미 존재하면 +1, 없으면 새로 추가
+        jedis.hincrBy(key, field, 1);
+        break;
+
+      case REMOVE_FROM_CART:
+        jedis.hdel(key, field);
+        break;
+
+      case CLEAR_CART:
+        jedis.del(key);
+        break;
     }
   }
 
