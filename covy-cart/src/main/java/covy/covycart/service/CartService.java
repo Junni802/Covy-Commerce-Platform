@@ -21,6 +21,14 @@ public class CartService {
 
   public void addItem(String userId, CartRequest request) {
     UserActionEvent event = new UserActionEvent(userId, request.getGoodsCd(), ActionType.ADD_TO_CATRT, System.currentTimeMillis());
+    if (event.getActionType() == ActionType.ADD_TO_CATRT) {
+      // Redis에 추가
+    } else if (event.getActionType() == ActionType.REMOVE_FROM_CART) {
+      // Redis에서 제거
+    } else if (event.getActionType() == ActionType.CLEAR_CART) {
+      // 전체 삭제
+    }
+
     kafkaTemplate.send("cart-events", userId, event);
   }
 
