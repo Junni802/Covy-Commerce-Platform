@@ -2,13 +2,14 @@ package covy.covycart.config.elastic;
 
 import covy.covycart.config.log.UserActionEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.RestClient;
 import org.apache.http.HttpHost;
-import org.elasticsearch.xcontent.XContentType;
 
 public class ElasticsearchCartSink extends RichSinkFunction<UserActionEvent> {
 
@@ -27,12 +28,22 @@ public class ElasticsearchCartSink extends RichSinkFunction<UserActionEvent> {
 
   @Override
   public void invoke(UserActionEvent value, Context context) throws Exception {
-    if (esClient != null) {
-      String id = value.getUserId() + "-" + value.getGoodsCd() + "-" + value.getTimestamp();
-      IndexRequest request = new IndexRequest("cart-events")
-          .id(id)
-          .source(mapper.writeValueAsString(value), XContentType.JSON);
+    try {
+      Map<String, Object> document = new HashMap<>();
+      document.put("userId", value.getUserId());
+      document.put("goodsCd", value.getGoodsCd());
+      document.put("actionType", value.getActionType().name());
+      document.put("timestamp", value.getTimestamp());
+
+      // 장바구니의 상태를 그대로 기록하기보다, 행동 로그로 남긴다.
+      IndexRequest request = new IndexRequest("user_actions")
+          .id(value.getUserId() + "_" + value.getGoodsCd() + "_" + value.getTimestamp())
+          .source(document);
+
       esClient.index(request, RequestOptions.DEFAULT);
+
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
