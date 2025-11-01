@@ -1,5 +1,7 @@
 package covy.covycart.service;
 
+import covy.covycart.config.log.ActionType;
+import covy.covycart.config.log.UserActionEvent;
 import covy.covycart.domain.Cart;
 import covy.covycart.domain.CartItem;
 import covy.covycart.dto.CartRequest;
@@ -8,29 +10,18 @@ import covy.covycart.repository.CartRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
   private final CartRepository cartRepository;
+  private final KafkaTemplate<String, UserActionEvent> kafkaTemplate;
 
-  public CartResponse addItem(String userId, CartRequest request) {
-    Cart cart = cartRepository.findByUserId(userId);
-    if (cart == null) cart = new Cart(userId, new ArrayList<>());
-
-    // 기존 아이템 있으면 수량 증가
-    Optional<CartItem> existingItem = cart.getItems().stream()
-        .filter(i -> i.getGoodsCd().equals(request.getProductId()))
-        .findFirst();
-    if (existingItem.isPresent()) {
-      existingItem.get().setQuantity(existingItem.get().getQuantity() + request.getQuantity());
-    } else {
-      cart.getItems().add(new CartItem(request.getProductId(), request.getQuantity()));
-    }
-
-    cartRepository.save(cart);
-    return new CartResponse(cart.getUserId(), cart.getItems());
+  public void addItem(String userId, CartRequest request) {
+    UserActionEvent event = new UserActionEvent(userId, request.getGoodsCd(), ActionType.ADD_TO_CATRT, System.currentTimeMillis());
+    kafkaTemplate.send("cart-events", userId, event);
   }
 
   public CartResponse getCart(String userId) {
