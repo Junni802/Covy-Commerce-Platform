@@ -73,7 +73,7 @@ public class GoodsController {
     return ResponseEntity.status(HttpStatus.OK).body(resut);
   }
 
-  @GetMapping("/user/search-goodsCd/{goodsCd}")
+  @GetMapping("/search-goodsCd/{goodsCd}")
   public ResponseEntity<Optional<GoodsEntity>> findGoodsCd(@PathVariable(name = "goodsCd") String goodsCd) {
 
     Optional<GoodsEntity> goods = goodsService.getGoodsCd(goodsCd);
