@@ -10,6 +10,7 @@ import covy.covycart.repository.CartRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,13 @@ import org.springframework.stereotype.Service;
 public class CartService {
   private final CartRepository cartRepository;
   private final KafkaTemplate<String, UserActionEvent> kafkaTemplate;
+  private final RedisTemplate<String, Object> redisTemplate;
 
   public void addItem(String userId, CartRequest request) {
     UserActionEvent event = new UserActionEvent(userId, request.getGoodsCd(), ActionType.ADD_TO_CATRT, System.currentTimeMillis());
     if (event.getActionType() == ActionType.ADD_TO_CATRT) {
       // Redis에 추가
+
     } else if (event.getActionType() == ActionType.REMOVE_FROM_CART) {
       // Redis에서 제거
     } else if (event.getActionType() == ActionType.CLEAR_CART) {
