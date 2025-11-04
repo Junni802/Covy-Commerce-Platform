@@ -14,7 +14,13 @@ public class RedisCartSink extends RichSinkFunction<UserActionEvent> {
   @Override
   public void open(Configuration parameters) throws Exception {
     super.open(parameters);
-    jedis = new Jedis("localhost", 6379);
+    try {
+      jedis = new Jedis("127.0.0.1", 6379);
+      System.out.println("Redis ping: " + jedis.ping());
+    } catch (Exception e) {
+      System.err.println("Redis 연결 실패: " + e.getMessage());
+      throw e;
+    }
   }
 
   @Override
