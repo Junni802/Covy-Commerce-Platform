@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CartService {
   private final CartRepository cartRepository;
-  private final KafkaTemplate<String, UserActionEvent> kafkaTemplate;
+  private final KafkaTemplate<String, String> kafkaTemplate;
   private final RedisTemplate<String, Object> redisTemplate;
 
   public void addItem(String userId, CartRequest request) {
@@ -32,7 +32,7 @@ public class CartService {
       // 전체 삭제
     }
 
-    kafkaTemplate.send("cart-events", userId, event);
+    kafkaTemplate.send("cart-events", userId, event.toString());
   }
 
   public CartResponse getCart(String userId) {

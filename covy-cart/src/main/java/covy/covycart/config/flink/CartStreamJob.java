@@ -31,9 +31,15 @@ public class CartStreamJob {
     // 4️⃣ Kafka → Flink 데이터 스트림 생성
     DataStream<String> stream = env.addSource(consumer);
 
-    // 5️⃣ JSON 문자열 → UserActionEvent 변환
+    // 5️⃣ JSON 문자열 → UserActionEvent 변환 및 콘솔 로그
     ObjectMapper mapper = new ObjectMapper();
-    DataStream<UserActionEvent> eventStream = stream.map(json -> mapper.readValue(json, UserActionEvent.class));
+    DataStream<UserActionEvent> eventStream = stream
+        .map(json -> {
+          UserActionEvent event = mapper.readValue(json, UserActionEvent.class);
+          // 🔹 콘솔에 로그 출력
+          System.out.println("Received event: " + event);
+          return event;
+        });
 
     // 6️⃣ Redis와 Elasticsearch Sink 연결
     eventStream.addSink(new RedisCartSink());
