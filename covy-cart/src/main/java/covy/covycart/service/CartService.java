@@ -1,5 +1,7 @@
 package covy.covycart.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import covy.covycart.config.log.ActionType;
 import covy.covycart.config.log.UserActionEvent;
 import covy.covycart.domain.Cart;
@@ -21,7 +23,7 @@ public class CartService {
   private final KafkaTemplate<String, String> kafkaTemplate;
   private final RedisTemplate<String, Object> redisTemplate;
 
-  public void addItem(String userId, CartRequest request) {
+  public void addItem(String userId, CartRequest request) throws JsonProcessingException {
     UserActionEvent event = new UserActionEvent(userId, request.getGoodsCd(), ActionType.ADD_TO_CATRT, System.currentTimeMillis());
     if (event.getActionType() == ActionType.ADD_TO_CATRT) {
       // Redis에 추가
@@ -32,7 +34,10 @@ public class CartService {
       // 전체 삭제
     }
 
-    kafkaTemplate.send("cart-events", userId, event.toString());
+
+    ObjectMapper mapper = new ObjectMapper();
+    String json = mapper.writeValueAsString(event);
+    kafkaTemplate.send("cart-events", userId, json);
   }
 
   public CartResponse getCart(String userId) {
