@@ -1,5 +1,6 @@
 package covy.covycart.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import covy.covycart.dto.CartRequest;
 import covy.covycart.dto.CartResponse;
 import covy.covycart.service.CartService;
@@ -22,7 +23,7 @@ public class CartController {
   @PostMapping
   public boolean addItem(
       @RequestHeader("X-User-Id") String userId,
-      @RequestBody CartRequest request) {
+      @RequestBody CartRequest request) throws JsonProcessingException {
       cartService.addItem(userId, request);
 
       return true;
