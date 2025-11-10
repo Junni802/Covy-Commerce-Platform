@@ -1,11 +1,11 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.15'
+    id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
 ext {
-    springCloudVersion = "2021.0.9"
+    set('springCloudVersion', "2024.0.0")
 }
 
 group = 'covy'
@@ -14,7 +14,7 @@ description = 'discovery-service'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
