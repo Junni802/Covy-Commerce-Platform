@@ -1,7 +1,11 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.2'
+    id 'org.springframework.boot' version '2.7.15'
     id 'io.spring.dependency-management' version '1.1.7'
+}
+
+ext {
+    springCloudVersion = "2021.0.9"
 }
 
 group = 'covy'
@@ -10,7 +14,7 @@ description = 'covy-user'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 
@@ -24,10 +28,6 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    set('springCloudVersion', "2024.0.0")
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
@@ -37,7 +37,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
-    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
@@ -57,12 +56,11 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '3.4.3'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.7.15'
 
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp
     implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp:4.2.1")
 
-    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }
