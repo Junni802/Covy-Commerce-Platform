@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,39 +20,47 @@ import org.springframework.security.web.util.matcher.IpAddressMatcher;
 @RequiredArgsConstructor
 public class WebSecurity {
 
-  private static final String[] WHITE_LIST = { "/", "/actuator/**" };
+  private static final String[] WHITE_LIST = {
+      "/", "/actuator/**"
+  };
 
   private final UserService userService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final ObjectPostProcessor<Object> objectPostProcessor;
   private final Environment env;
   private final JwtTokenProvider jwtTokenProvider;
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
+  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .antMatchers(WHITE_LIST).permitAll()
-            .antMatchers(String.valueOf(new IpAddressMatcher("127.0.0.1"))).permitAll()
-            .antMatchers("/users/**").permitAll()
+            .requestMatchers(WHITE_LIST).permitAll()
+            .requestMatchers(new IpAddressMatcher("127.0.0.1")).permitAll()
+            .requestMatchers("/users/**").permitAll()
             .anyRequest().authenticated()
         )
-        .addFilterBefore(authenticationFilter(authManager), UsernamePasswordAuthenticationFilter.class);
+        // 사용자 로그인 필터
+        .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        // 서비스 계정 JWT 검증 필터
+//        .addFilterBefore(serviceAccountJwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
 
-  @Bean
-  public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-    return http.getSharedObject(AuthenticationManagerBuilder.class)
-        .userDetailsService(userService)
-        .passwordEncoder(bCryptPasswordEncoder)
-        .and()
-        .build();
+  public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+    return auth.build();
   }
 
   @Bean
-  public AuthenticationFilter authenticationFilter(AuthenticationManager authManager) {
-    return new AuthenticationFilter(authManager, userService, env, jwtTokenProvider);
+  public AuthenticationFilter authenticationFilter() throws Exception {
+    return new AuthenticationFilter(authenticationManager(new AuthenticationManagerBuilder(objectPostProcessor)),
+        userService, env, jwtTokenProvider);
   }
+
+//  @Bean
+//  public ServiceAccountJwtFilter serviceAccountJwtFilter() {
+//    return new ServiceAccountJwtFilter(env);
+//  }
 }
