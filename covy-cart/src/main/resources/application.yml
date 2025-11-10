@@ -1,4 +1,15 @@
 spring:
+
+  jackson:
+    mapper:
+      ACCEPT_CASE_INSENSITIVE_PROPERTIES: true
+
+  cloud:
+    openfeign:
+      httpclient:
+        hc5:
+          enabled: false # Disables Apache HttpClient 5 and potentially enables Java 11 HttpClient
+
   application:
     name: covy-cart
 

@@ -1,7 +1,6 @@
 package covy.covycart.config.redis;
 
 import covy.covycart.config.log.UserActionEvent;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import redis.clients.jedis.Jedis;
 
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
