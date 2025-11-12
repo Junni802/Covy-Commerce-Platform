@@ -1,6 +1,10 @@
 package covy.covycart.config.redis;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import covy.covycart.config.log.UserActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 import redis.clients.jedis.Jedis;
 
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
@@ -23,7 +27,24 @@ public class RedisCartSink extends RichSinkFunction<UserActionEvent> {
   }
 
   @Override
-  public void invoke(UserActionEvent event, Context context) {
+  public void invoke(UserActionEvent event, Context context) throws JsonProcessingException {
+
+    String actionLogKey = "user:" + event.getUserId() + ":actions";
+
+    Map<String, Object> logData = new HashMap<>();
+    logData.put("goodsId", event.getGoodsCd());
+    logData.put("action", event.getActionType().name());
+    logData.put("timestamp", System.currentTimeMillis());
+
+// ObjectMapper로 JSON 변환
+    String jsonLog = new ObjectMapper().writeValueAsString(logData);
+
+// 최근 행동부터 LPUSH (시간 순)
+    jedis.lpush(actionLogKey, jsonLog);
+
+// 로그가 너무 길어지지 않게 최근 100개까지만 유지
+    jedis.ltrim(actionLogKey, 0, 99);
+
     System.out.println("rkqt dkds s");
     String key = "user:" + event.getUserId() + ":cart";
     String field = event.getGoodsCd();

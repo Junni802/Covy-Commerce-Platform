@@ -38,6 +38,7 @@ dependencies {
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
 
     // Lombok
@@ -53,6 +54,8 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 
     // https://mvnrepository.com/artifact/org.apache.flink/flink-clients
     implementation group: 'org.apache.flink', name: 'flink-clients', version: '1.16.1'
