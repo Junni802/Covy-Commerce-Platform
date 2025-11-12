@@ -5,5 +5,6 @@ public enum ActionType {
   ADD_TO_CATRT,
   REMOVE_FROM_CART,
   CLEAR_CART,
-  PURCHASE
+  PURCHASE,
+  VIEW
 }
