@@ -24,6 +24,7 @@ public class RedisCartSink extends RichSinkFunction<UserActionEvent> {
 
   @Override
   public void invoke(UserActionEvent event, Context context) {
+    System.out.println("rkqt dkds s");
     String key = "user:" + event.getUserId() + ":cart";
     String field = event.getGoodsCd();
 
