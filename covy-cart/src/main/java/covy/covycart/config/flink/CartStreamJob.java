@@ -1,9 +1,11 @@
 package covy.covycart.config.flink;
 
+import covy.covycart.config.UserActionEventSink;
 import covy.covycart.config.log.ActionType;
 import covy.covycart.config.log.UserActionEvent;
 import covy.covycart.config.redis.RedisCartSink;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.sql.DataSource;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.connector.kafka.source.KafkaSource;
@@ -11,15 +13,10 @@ import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsIni
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 
 public class CartStreamJob {
 
@@ -30,7 +27,7 @@ public class CartStreamJob {
         .setBootstrapServers("localhost:9092")
         .setTopics("cart-events")
         .setGroupId("flink-consumer-group")
-        .setStartingOffsets(OffsetsInitializer.earliest())
+        .setStartingOffsets(OffsetsInitializer.latest())
         .setValueOnlyDeserializer(new SimpleStringSchema())
         .build();
 
@@ -49,26 +46,8 @@ public class CartStreamJob {
     // ================================
     // 5️⃣ PostgreSQL Sink (AI 학습용 Raw 이벤트 저장)
     // ================================
-    eventStream.addSink(new SinkFunction<UserActionEvent>() {
-      @Override
-      public void invoke(UserActionEvent event, Context context) {
-        try (Connection conn = DriverManager.getConnection(
-            "jdbc:postgresql://localhost:5432/cart_db", "username", "password")) {
-
-          String sql = "INSERT INTO cart_events(user_id, goods_cd, action_type, timestamp) VALUES (?, ?, ?, ?)";
-          try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, event.getUserId());
-            ps.setString(2, event.getGoodsCd());
-            ps.setString(3, event.getActionType().name());
-            ps.setLong(4, event.getTimestamp());
-            ps.executeUpdate();
-          }
-
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
+    // ✅ DB Sink (Spring Boot DataSource 사용)
+    eventStream.addSink(new UserActionEventSink());
 
     // ================================
     // 6️⃣ 실시간 선호도 계산 (Window + KeyBy)

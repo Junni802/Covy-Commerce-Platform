@@ -1,10 +1,12 @@
 package covy.covycart;
 
 import covy.covycart.config.flink.CartStreamJob;
+import javax.sql.DataSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication
 public class CovyCartApplication implements CommandLineRunner {
