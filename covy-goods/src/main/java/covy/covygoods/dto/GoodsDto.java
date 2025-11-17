@@ -6,11 +6,8 @@ import lombok.Data;
 public class GoodsDto {
 
   private String goodsCd;
-  private Integer qty;
-  private Integer unitPrice;
-  private Integer totalPrice;
-
-  private String orderId;
-  private String userId;
-
+  private String goodsNm;
+  private String category;
+  private Integer price;
+  private boolean deleted;  // del_yn → boolean 형태로 매핑
 }
