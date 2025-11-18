@@ -7,8 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients(basePackages = "covy.covycart.feign") // FeignClient 패키지 명 맞춰주기
 public class CovyCartApplication implements CommandLineRunner {
 
   public static void main(String[] args) {

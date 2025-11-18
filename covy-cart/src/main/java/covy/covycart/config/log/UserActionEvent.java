@@ -19,6 +19,10 @@ public class UserActionEvent {
 
   private String goodsCd;
 
+  private String goodsNm;
+
+  private String category;
+
   private ActionType actionType;
 
   private Long timestamp;

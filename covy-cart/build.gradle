@@ -42,7 +42,7 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
 
     // mongo db
-    implementation 'org.mongodb:mongodb-driver-sync:5.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
