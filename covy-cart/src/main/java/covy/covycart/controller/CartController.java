@@ -5,39 +5,65 @@ import covy.covycart.dto.CartRequest;
 import covy.covycart.dto.CartResponse;
 import covy.covycart.service.CartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 public class CartController {
+
   private final CartService cartService;
 
+  /**
+   * 장바구니에 아이템 추가
+   *
+   * @param userId 사용자 ID (헤더 X-User-Id)
+   * @param request 장바구니에 추가할 상품 정보
+   * @return 성공 여부
+   */
   @PostMapping
-  public boolean addItem(
+  public ResponseEntity<Boolean> addItem(
       @RequestHeader("X-User-Id") String userId,
-      @RequestBody CartRequest request) throws JsonProcessingException {
+      @RequestBody CartRequest request) {
+
+    try {
       cartService.addItem(userId, request);
-
-      return true;
+      return ResponseEntity.ok(true);
+    } catch (JsonProcessingException e) {
+      // JSON 직렬화 오류 처리
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+    } catch (Exception e) {
+      // 기타 예외 처리
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+    }
   }
 
+  /**
+   * 사용자 장바구니 조회
+   *
+   * @param userId 사용자 ID (헤더 X-User-Id)
+   * @return CartResponse 장바구니 정보
+   */
   @GetMapping
-  public CartResponse getCart(@RequestHeader("X-User-Id") String userId) {
-    return cartService.getCart(userId);
+  public ResponseEntity<CartResponse> getCart(@RequestHeader("X-User-Id") String userId) {
+    CartResponse cart = cartService.getCart(userId);
+    return ResponseEntity.ok(cart);
   }
 
+  /**
+   * 장바구니 아이템 삭제
+   *
+   * @param userId 사용자 ID (헤더 X-User-Id)
+   * @param productId 삭제할 상품 코드
+   */
   @DeleteMapping("/{productId}")
-  public void removeItem(
+  public ResponseEntity<Void> removeItem(
       @RequestHeader("X-User-Id") String userId,
       @PathVariable String productId) {
+
     cartService.removeItem(userId, productId);
+    return ResponseEntity.noContent().build();
   }
 }
