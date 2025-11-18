@@ -17,6 +17,8 @@ public interface GoodsService {
 
   GoodsDocument saveGoods(GoodsEntity goods);
 
+  Iterable<GoodsEntity> saveGoodsAll(Iterable<GoodsEntity> goodsEntityList);
+
   /* DB를 통한 상품 검색
   Iterable<GoodsEntity> getgoods(String goodsNm);*/
 

@@ -10,12 +10,12 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Document(indexName = "goods")
 public class GoodsDocument {
   @Id
-  private String id;
+  private String goodsCd;
 
   @Field(type = FieldType.Text, analyzer = "standard")
   private String goodsNm;
 
-  private Integer stock;
-
-  private Integer unitPrice;
+  private String category;
+  private Integer price;
+  private boolean deleted;
 }

@@ -1,6 +1,7 @@
 package covy.covygoods.common.excel.service;
 
 import covy.covygoods.dto.GoodsDto;
+import covy.covygoods.entity.GoodsEntity;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class ExcelUploadServiceImpl implements ExcelUploadService {
   private static final int COL_DEL_YN = 4;
 
   @Override
-  public List<GoodsDto> readExcel(File file) throws Exception {
-    List<GoodsDto> goodsList = new ArrayList<>();
+  public List<GoodsEntity> readExcel(File file) throws Exception {
+    List<GoodsEntity> goodsList = new ArrayList<>();
 
     try (FileInputStream fis = new FileInputStream(file);
         Workbook workbook = WorkbookFactory.create(fis)) {
@@ -46,24 +47,24 @@ public class ExcelUploadServiceImpl implements ExcelUploadService {
         }
 
         // 3) DTO 생성
-        GoodsDto dto = new GoodsDto();
-        dto.setGoodsCd(getCellString(row, COL_GOODS_CD));
-        dto.setGoodsNm(getCellString(row, COL_GOODS_NM));
-        dto.setCategory(getCellString(row, COL_CATEGORY));
-        dto.setPrice(parseSafeInteger(getCellString(row, COL_PRICE)));
-        dto.setDeleted(parseYnBoolean(getCellString(row, COL_DEL_YN)));
+        GoodsEntity entity = new GoodsEntity();
+        entity.setGoodsCd(getCellString(row, COL_GOODS_CD));
+        entity.setGoodsNm(getCellString(row, COL_GOODS_NM));
+        entity.setCategory(getCellString(row, COL_CATEGORY));
+        entity.setPrice(parseSafeInteger(getCellString(row, COL_PRICE)));
+        entity.setDeleted(parseYnBoolean(getCellString(row, COL_DEL_YN)));
 
         // 4) 필수값 누락 시 skip + 로그
-        if (dto.getGoodsCd() == null || dto.getGoodsCd().isBlank()
-            || dto.getGoodsNm() == null || dto.getGoodsNm().isBlank()
-            || dto.getPrice() == null) {
+        if (entity.getGoodsCd() == null || entity.getGoodsCd().isBlank()
+            || entity.getGoodsNm() == null || entity.getGoodsNm().isBlank()
+            || entity.getPrice() == null) {
           System.out.println("필수 컬럼 누락 row: " + rowIndex + " → 건너뜀");
           rowIndex++;
           continue;
         }
 
         // 5) 정상 row 추가
-        goodsList.add(dto);
+        goodsList.add(entity);
         rowIndex++;
       }
     }

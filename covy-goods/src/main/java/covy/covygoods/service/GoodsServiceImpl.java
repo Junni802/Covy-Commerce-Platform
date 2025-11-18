@@ -1,7 +1,6 @@
 package covy.covygoods.service;
 
 import covy.covygoods.common.elastic.document.GoodsDocument;
-import covy.covygoods.dto.GoodsDto;
 import covy.covygoods.entity.GoodsEntity;
 import covy.covygoods.repository.GoodsRepository;
 import covy.covygoods.repository.GoodsSearchRepository;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,26 +17,22 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-/**
- * <클래스 설명>
- *
- * @author : junni802
- * @date : 2025-02-25
- */
-
-@Data
 @Slf4j
 @Service
 public class GoodsServiceImpl implements GoodsService {
 
-  GoodsRepository goodsRepository;
-  GoodsSearchRepository goodsSearchRepository;
-  RedisTemplate<String, Object> redisTemplate;
-  StringRedisTemplate stringRedisTemplate;
+  private final GoodsRepository goodsRepository;
+  private final GoodsSearchRepository goodsSearchRepository;
+  private final RedisTemplate<String, Object> redisTemplate;
+  private final StringRedisTemplate stringRedisTemplate;
 
   @Autowired
-  public GoodsServiceImpl(GoodsRepository goodsRepository, GoodsSearchRepository goodsSearchRepository
-    , RedisTemplate<String, Object> redisTemplate, StringRedisTemplate stringRedisTemplate) {
+  public GoodsServiceImpl(
+      GoodsRepository goodsRepository,
+      GoodsSearchRepository goodsSearchRepository,
+      RedisTemplate<String, Object> redisTemplate,
+      StringRedisTemplate stringRedisTemplate
+  ) {
     this.goodsRepository = goodsRepository;
     this.goodsSearchRepository = goodsSearchRepository;
     this.redisTemplate = redisTemplate;
@@ -52,10 +46,11 @@ public class GoodsServiceImpl implements GoodsService {
 
   @Override
   public Iterable<GoodsDocument> getgoods(String goodsNm, Pageable pageable) {
-    String cacheKey = "search:" + goodsNm;
-    List<GoodsDocument> cached = (List<GoodsDocument>)  redisTemplate.opsForValue().get(cacheKey);
 
-    // ✅ 1. 검색어 인기 카운트 증가
+    String cacheKey = "search:" + goodsNm;
+    List<GoodsDocument> cached = (List<GoodsDocument>) redisTemplate.opsForValue().get(cacheKey);
+
+    // 검색어 인기 카운트 증가
     stringRedisTemplate.opsForZSet().incrementScore("popular:keywords", goodsNm, 1);
 
     if (cached != null) {
@@ -64,7 +59,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     Page<GoodsDocument> result = goodsSearchRepository.findByGoodsNmContaining(goodsNm, pageable);
     redisTemplate.opsForValue().set(cacheKey, result.getContent(), 30, TimeUnit.MINUTES);
-    return result;
+    return result.getContent();
   }
 
   @Override
@@ -72,6 +67,12 @@ public class GoodsServiceImpl implements GoodsService {
     return goodsRepository.findByGoodsCd(goodsCd);
   }
 
+  @Override
+  public Iterable<GoodsEntity> saveGoodsAll(Iterable<GoodsEntity> goodsEntityList) {
+    return goodsRepository.saveAll(goodsEntityList);
+  }
+
+  @Override
   public GoodsDocument saveGoods(GoodsEntity goods) {
     // 중복 확인
     goodsRepository.findByGoodsCd(goods.getGoodsCd())
@@ -82,20 +83,16 @@ public class GoodsServiceImpl implements GoodsService {
     // RDB 저장
     goodsRepository.save(goods);
 
-    // Elastic 저장
-    GoodsDocument goodsDocument = new GoodsDocument();
-    goodsDocument.setGoodsNm(goods.getGoodsNm());
-    goodsDocument.setId(goods.getId().toString());
-    goodsDocument.setStock(goods.getStock());
-    goodsDocument.setUnitPrice(goods.getUnitPrice());
-    return goodsSearchRepository.save(goodsDocument);
-  }
+    // Elasticsearch 저장
+    GoodsDocument doc = new GoodsDocument();
+    doc.setGoodsCd(goods.getGoodsCd());
+    doc.setGoodsNm(goods.getGoodsNm());
+    doc.setCategory(goods.getCategory());
+    doc.setPrice(goods.getPrice());
+    doc.setDeleted(goods.isDeleted()); // boolean 필드
 
-  /* DB를 통한 상품 검색
-  @Override
-  public Iterable<GoodsEntity> getgoods(String goodsNm) {
-    return goodsRepository.findByGoodsNmContaining(goodsNm);
-  }*/
+    return goodsSearchRepository.save(doc);
+  }
 
   @Override
   public List<String> getTopKeywords(int limit) {

@@ -43,10 +43,11 @@ public class GoodsBatchConfig {
   public ItemProcessor<GoodsEntity, GoodsDocument> goodsProcessor() {
     return goods -> {
       GoodsDocument doc = new GoodsDocument();
-      doc.setId(goods.getGoodsCd()); // Elasticsearch의 PK
+      doc.setGoodsCd(goods.getGoodsCd()); // Elasticsearch의 PK
       doc.setGoodsNm(goods.getGoodsNm());
-      doc.setStock(goods.getStock());
-      doc.setUnitPrice(goods.getUnitPrice());
+      doc.setCategory(goods.getCategory());
+      doc.setPrice(goods.getPrice());
+      doc.setDeleted(goods.isDeleted());
       return doc;
     };
   }
