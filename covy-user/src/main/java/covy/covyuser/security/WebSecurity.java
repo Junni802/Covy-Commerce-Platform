@@ -15,6 +15,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
 
+/**
+ * Spring Security 설정 클래스
+ * <p>
+ * - CSRF 비활성화
+ * - 인증/권한 필터 체인 구성
+ * - 사용자 로그인 필터(AuthenticationFilter) 추가
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -30,8 +37,11 @@ public class WebSecurity {
   private final Environment env;
   private final JwtTokenProvider jwtTokenProvider;
 
+  /**
+   * Security Filter Chain 정의
+   */
   @Bean
-  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
@@ -40,27 +50,40 @@ public class WebSecurity {
             .requestMatchers("/users/**").permitAll()
             .anyRequest().authenticated()
         )
-        // 사용자 로그인 필터
+        // 사용자 로그인 필터 추가
         .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        // 서비스 계정 JWT 검증 필터
-//        .addFilterBefore(serviceAccountJwtFilter(), UsernamePasswordAuthenticationFilter.class);
+    // 서비스 계정 JWT 검증 필터 필요 시 주석 해제
+    // .addFilterBefore(serviceAccountJwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
 
+  /**
+   * AuthenticationManager Bean 구성
+   */
+  @Bean
   public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+    auth.userDetailsService(userService)
+        .passwordEncoder(bCryptPasswordEncoder);
     return auth.build();
   }
 
+  /**
+   * 로그인 처리 필터(AuthenticationFilter) Bean
+   */
   @Bean
   public AuthenticationFilter authenticationFilter() throws Exception {
-    return new AuthenticationFilter(authenticationManager(new AuthenticationManagerBuilder(objectPostProcessor)),
-        userService, env, jwtTokenProvider);
+    return new AuthenticationFilter(
+        authenticationManager(new AuthenticationManagerBuilder(objectPostProcessor)),
+        userService,
+        env,
+        jwtTokenProvider
+    );
   }
 
-//  @Bean
-//  public ServiceAccountJwtFilter serviceAccountJwtFilter() {
-//    return new ServiceAccountJwtFilter(env);
-//  }
+  // 서비스 계정 JWT 필터 필요 시 주석 해제
+  // @Bean
+  // public ServiceAccountJwtFilter serviceAccountJwtFilter() {
+  //     return new ServiceAccountJwtFilter(env);
+  // }
 }
