@@ -59,7 +59,7 @@ public class FeatureBatchConfig {
   public RepositoryItemWriter<UserFeature> userFeatureWriter() {
     RepositoryItemWriter<UserFeature> writer = new RepositoryItemWriter<>();
     writer.setRepository(userFeatureRepository);
-    writer.setMethodName("saveAll");
+    writer.setMethodName("save");
     return writer;
   }
 

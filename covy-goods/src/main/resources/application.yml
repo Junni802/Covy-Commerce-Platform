@@ -1,6 +1,6 @@
 batch:
   jobs:
-    goodsJob: "0 34 14 * * ?"
+    goodsJob: "0 21 18 * * ?"
 
 spring:
   application:
