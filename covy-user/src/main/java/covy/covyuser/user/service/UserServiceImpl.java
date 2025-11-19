@@ -4,6 +4,7 @@ import covy.covyuser.user.dto.UserDto;
 import covy.covyuser.user.entitiy.UserEntity;
 import covy.covyuser.user.repository.UserRepository;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -18,97 +19,81 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+/**
+ * UserService 구현체
+ * - 사용자 CRUD 및 Spring Security 인증 처리
+ * - 주문 마이크로서비스 호출은 CircuitBreaker로 보호
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
   private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-  UserRepository userRepository;
-  BCryptPasswordEncoder passwordEncoder;
-  Environment env;
-  RestTemplate restTemplate;
-//  OrderServiceClient orderServiceClient;
-  CircuitBreakerFactory circuitBreakerFactory;
+
+  private final UserRepository userRepository;
+  private final BCryptPasswordEncoder passwordEncoder;
+  private final Environment env;
+  private final CircuitBreakerFactory circuitBreakerFactory;
+
+  private final ModelMapper modelMapper;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-      Environment env, CircuitBreakerFactory circuitBreakerFactory) {
+  public UserServiceImpl(UserRepository userRepository,
+      BCryptPasswordEncoder passwordEncoder,
+      Environment env,
+      CircuitBreakerFactory circuitBreakerFactory) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.env = env;
-//    this.orderServiceClient = orderServiceClient;
     this.circuitBreakerFactory = circuitBreakerFactory;
+    this.modelMapper = new ModelMapper();
+    this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
   }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     UserEntity userEntity = userRepository.findByEmail(username);
-
     if (userEntity == null) {
       throw new UsernameNotFoundException(username);
     }
 
-    return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
-        true, true, true, true,
-        new ArrayList<>());
+    return User.builder()
+        .username(userEntity.getEmail())
+        .password(userEntity.getEncryptedPwd())
+        .authorities(new ArrayList<>())
+        .accountExpired(false)
+        .accountLocked(false)
+        .credentialsExpired(false)
+        .disabled(false)
+        .build();
   }
 
   @Override
   public UserDto createUser(UserDto userDto) {
     userDto.setUserId(UUID.randomUUID().toString());
-
-    ModelMapper mapper = new ModelMapper();
-    mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-    UserEntity userEntity = mapper.map(userDto, UserEntity.class);
+    UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
     userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPwd()));
-
     userRepository.save(userEntity);
-
-    UserDto map = mapper.map(userEntity, UserDto.class);
-
-    return map;
+    return modelMapper.map(userEntity, UserDto.class);
   }
 
   @Override
   public UserDto getUserByUserId(String userId) {
     UserEntity userEntity = userRepository.findByUserId(userId);
-
     if (userEntity == null) {
       throw new UsernameNotFoundException("User not found");
     }
 
-    ModelMapper mapper = new ModelMapper();
-    mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-    UserDto userDto = mapper.map(userEntity, UserDto.class);
-    /* Using a resttemplate */
-    /* String orderUrl = String.format(env.getProperty("order_service.url"), userId);
-    ResponseEntity<List<ResponseOrder>> orderListResponse =
-        restTemplate.exchange(orderUrl, HttpMethod.GET, null,
-            new ParameterizedTypeReference<List<ResponseOrder>>() {
-            });
-    List<ResponseOrder> orderList = orderListResponse.getBody();*/
+    UserDto userDto = modelMapper.map(userEntity, UserDto.class);
 
-    /* Using a feign client */
-    /* feign exception handling */
-    /*
-    List<ResponseOrder> orderList = null;
-    try{
-      orderList = orderServiceClient.getOrders(userId);
-    } catch (FeignException e) {
-      log.error(e.getMessage());
-    }*/
+    // CircuitBreaker 예시 (주문 마이크로서비스 호출)
+    log.info("Before calling orders microservice");
+    CircuitBreaker circuitBreaker = circuitBreakerFactory.create("orderServiceCircuitBreaker");
+    // List<ResponseOrder> orderList = circuitBreaker.run(() -> orderServiceClient.getOrders(userId),
+    //         throwable -> new ArrayList<>());
+    log.info("After calling orders microservice");
 
-    /* ErrorDecoder */
-//    List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
-    log.info("Before call orders microservice");
-    CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
-//    List<ResponseOrder> orderList = circuitBreaker.run(() -> orderServiceClient.getOrders(userId),
-//        throwable -> new ArrayList<>());
-    log.info("After call orders microservice");
-
-
-//    userDto.setOrders(orderList);
+    // userDto.setOrders(orderList);
 
     return userDto;
   }
@@ -121,8 +106,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto getUserDetsByEmail(String userName) {
     UserEntity userEntity = userRepository.findByEmail(userName);
-
-    UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
-    return userDto;
+    if (userEntity == null) {
+      throw new UsernameNotFoundException("User not found by email: " + userName);
+    }
+    return modelMapper.map(userEntity, UserDto.class);
   }
 }
