@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class GoodsDto {
-
   private String goodsCd;
   private String goodsNm;
   private String category;
