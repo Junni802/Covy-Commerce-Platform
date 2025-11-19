@@ -35,7 +35,7 @@ public class CartService {
    * 3) 이벤트 생성 후 Redis/Kafka 처리
    */
   public void addItem(String userId, CartRequest request) throws JsonProcessingException {
-    GoodsResponseDto goods = goodsServiceClient.getGoodsCd(request.getGoodsCd());
+    GoodsResponseDto goods = goodsServiceClient.getGoodsByCode(request.getGoodsCd());
 
     if (ObjectUtils.isEmpty(goods)) {
       // 상품 정보가 없으면 장바구니 처리하지 않음
