@@ -1,0 +1,7 @@
+encrypt:
+  key-store:
+    #    location: file://${user.home}/keystore/apiEncryptionKey.jks
+    password: 1q2w3e4r
+    alias: apiEncryptionKey
+    location: file:///Applications/covy_project/keystore/apiEncryptionKey.jks
+#  key: abcdefghijklmnopqrstuvwxyz0123456789

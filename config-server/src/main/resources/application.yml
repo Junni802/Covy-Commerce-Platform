@@ -1,0 +1,25 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///Applications/covy_project/covy-cloud-config
+        git:
+          uri: https://github.com/Junni802/covy-cloud-config
+#          username: [username]
+#          password: [password]
+#          uri: file:///Applications/git-local-repo
+
+management:
+  endpoint:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh

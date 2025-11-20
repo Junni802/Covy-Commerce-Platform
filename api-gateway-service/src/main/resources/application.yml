@@ -9,12 +9,6 @@ eureka:
 spring:
   application:
     name: api-gateway-service
-  #  rabbitmq:
-  #    host: 127.0.0.1
-  #    port: 5672
-  #    stream:
-  #      username: guest
-  #      password: guest
   cloud:
     gateway:
       default-filters:
@@ -68,6 +62,14 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/covy-order/(?<segment>.*), /$\{segment}
+        - id: covy-cart
+          uri: lb://COVY-CART
+          predicates:
+            - Path=/covy-cart/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/covy-cart/(?<segment>.*), /$\{segment}
+            - JwtAuthGatewayFilter
 
 
 #jwt:
