@@ -62,7 +62,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp
     implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp:4.2.1")
 
-    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-sleuth-zipkin
+    implementation("org.springframework.cloud:spring-cloud-sleuth-zipkin:3.1.11")
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-zipkin
+    implementation("org.springframework.cloud:spring-cloud-starter-zipkin:2.2.2.RELEASE")
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }

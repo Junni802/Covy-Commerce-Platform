@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class UserController {
 
+  private static final Logger log = LoggerFactory.getLogger(UserController.class);
   private final UserService userService;
   private final Environment env;
   private final ModelMapper modelMapper;
@@ -69,10 +72,12 @@ public class UserController {
    */
   @PostMapping("/users")
   public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser requestUser) {
+    log.info("Before call user microservice");
     UserDto userDto = modelMapper.map(requestUser, UserDto.class);
     userService.createUser(userDto);
 
     ResponseUser responseUser = modelMapper.map(userDto, ResponseUser.class);
+    log.info("After call user microservice");
     return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
   }
 
