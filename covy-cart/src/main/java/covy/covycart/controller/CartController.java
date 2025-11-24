@@ -26,18 +26,10 @@ public class CartController {
   @PostMapping
   public ResponseEntity<Boolean> addItem(
       @RequestHeader("X-User-Id") String userId,
-      @RequestBody CartRequest request) {
+      @RequestBody CartRequest request) throws JsonProcessingException {
 
-    try {
       cartService.addItem(userId, request);
       return ResponseEntity.ok(true);
-    } catch (JsonProcessingException e) {
-      // JSON 직렬화 오류 처리
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-    } catch (Exception e) {
-      // 기타 예외 처리
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-    }
   }
 
   /**

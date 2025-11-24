@@ -14,7 +14,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     hikari:
       username: root
-      password: '{cipher}AQBp8pU4M/uie8HxwR785g+Trdh4iIO194dpgf+MrozYCNLF+kDvWTyu13JUhbyPDyDuS/MF0ZJr478LqMwRyYxq0+/cvbBzHBA8vFoCIVk7Er/O6n0p4lXpM/Q3416LbkEL0+Rrwj1hPiBjiP6DBp5JGPR2qNA4NAOFWP2IhLNPlYfQw/ktl0MsGABwABgA5Pu7ML5LZXMohRSmrzZxFoMGNK7WIbvKNnH5O/VFYlqoN8kYv4rtZoDiwDqckEvS3efkrocMF5DnZIWdyyozeVkC9xG0U3mGia4dAkFzV0EGZ0WWP9kPm4pxVglaItvskwdtTWaPnTT2exFc+jUhNDOlJ8BUt2oaZPUsux0ot5GdqtRJgPhDo7dY2j/f5lKywek='
+      password: test1357
 
   jackson:
     mapper:

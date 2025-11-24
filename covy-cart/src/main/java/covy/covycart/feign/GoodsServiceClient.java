@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 @FeignClient(
     name = "covy-goods",
-    path = "/goods"      // 모든 API 앞에 공통 prefix 적용
+    path = ""      // 모든 API 앞에 공통 prefix 적용
 )
 public interface GoodsServiceClient {
 
