@@ -10,7 +10,7 @@ end
 local count = redis.call("INCR", KEYS[2])
 
 -- 수량이 초과되었으면 되돌리고 종료
-if (count > 15) then
+if (count > 1000) then
   redis.call('DECR', KEYS[2])
   return -1
 end
