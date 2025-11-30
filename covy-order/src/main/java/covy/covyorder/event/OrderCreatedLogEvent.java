@@ -2,7 +2,7 @@ package covy.covyorder.event;
 
 public class OrderCreatedLogEvent {
 
-  private String productId;
+  private String goodsCd;
   private Integer qty;
   private Integer unitPrice;
   private Integer totalPrice;
@@ -13,7 +13,7 @@ public class OrderCreatedLogEvent {
   @Override
   public String toString() {
     return "OrderCreatedLogEvent ["
-        + "productId=" + productId
+        + "goodsCd=" + goodsCd
         + ", qty=" + qty
         + ", unitPrice=" + unitPrice
         + ", totalPrice=" + totalPrice

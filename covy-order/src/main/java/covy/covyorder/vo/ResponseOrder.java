@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @JsonInclude(Include.NON_NULL)
 public class ResponseOrder {
-  private String productId;
+  private String goodsCd;
   private Integer qty;
   private Integer unitPrice;
   private Integer totalPrice;

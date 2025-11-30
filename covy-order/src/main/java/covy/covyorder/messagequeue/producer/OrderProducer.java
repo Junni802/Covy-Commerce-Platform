@@ -43,7 +43,7 @@ public class OrderProducer {
     Payload payload = Payload.builder()
         .order_id(orderDto.getOrderId())
         .user_id(orderDto.getUserId())
-        .product_id(orderDto.getProductId())
+        .product_id(orderDto.getGoodsCd())
         .qty(orderDto.getQty())
         .unit_price(orderDto.getUnitPrice())
         .total_price(orderDto.getTotalPrice())
