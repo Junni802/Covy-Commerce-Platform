@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OrderDto {
 
-  private String productId;
+  private String goodsCd;
   private Integer qty;
   private Integer unitPrice;
   private Integer totalPrice;
