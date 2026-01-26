@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -74,24 +75,38 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     String email = ((User) authResult.getPrincipal()).getUsername();
     UserDto userDetails = userService.getUserDetsByEmail(email);
 
-    // Generate Tokens
+    // 1. 토큰 생성
     String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
     String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
 
-    // 1️⃣ Access Token: JSON Response Body
+    // 2. Access Token 쿠키 생성 (15분)
+    ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+        .path("/")
+        .httpOnly(true)
+        .secure(false) // 로컬 테스트 시 false, 배포 시 true
+        .maxAge(15 * 60)
+        .sameSite("Lax")
+        .build();
+
+    // 3. Refresh Token 쿠키 생성 (7일)
+    ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+        .path("/")
+        .httpOnly(true)
+        .secure(false) // 로컬 테스트 시 false, 배포 시 true
+        .maxAge(REFRESH_TOKEN_VALIDITY_SEC)
+        .sameSite("Lax")
+        .build();
+
+    // 4. 응답 헤더에 쿠키 추가 (순서 중요: 바디를 쓰기 전에 헤더를 먼저 설정)
+    response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, accessCookie.toString());
+    response.addHeader(org.springframework.http.HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+    // 5. 바디 응답 (쿠키로만 관리한다면 바디는 비워두거나 메시지만 전달)
     Map<String, String> body = new HashMap<>();
-    body.put("accessToken", accessToken);
+    body.put("message", "Login Success");
 
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
     OBJECT_MAPPER.writeValue(response.getWriter(), body);
-
-    // 2️⃣ Refresh Token: HttpOnly, Secure Cookie
-    Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-    refreshCookie.setHttpOnly(true);
-    refreshCookie.setSecure(true); // HTTPS 환경에서 true
-    refreshCookie.setPath("/");
-    refreshCookie.setMaxAge(REFRESH_TOKEN_VALIDITY_SEC);
-    response.addCookie(refreshCookie);
   }
 }
