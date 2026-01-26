@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.2'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'covy'
+version = '0.0.1-SNAPSHOT'
+description = 'covy-common'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 1. 핵심 AOP 라이브러리 (AspectJ 사용을 위해 필수)
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // 2. Web 관련 클래스 사용 (HttpServletRequest, RequestContextHolder 등을 쓰기 위해 필요)
+    // 'starter-web' 전체를 가져와도 되지만, 공통 모듈을 가볍게 유지하려면 아래 권장
+    compileOnly 'org.springframework.boot:spring-boot-starter-web'
+
+    // 3. 편리한 로깅 및 코드 축약을 위해
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // 4. 테스트용
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
