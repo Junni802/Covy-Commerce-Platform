@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'org.springframework.boot' version '4.0.2'
     id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -19,8 +19,14 @@ repositories {
 }
 
 dependencies {
-    // 1. 핵심 AOP 라이브러리 (AspectJ 사용을 위해 필수)
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    // HttpServletRequest를 사용하기 위해 필요
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+
+    // Source: https://mvnrepository.com/artifact/org.springframework/spring-aop
+    implementation("org.springframework:spring-aop:7.0.3")
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop
+    implementation("org.springframework.boot:spring-boot-starter-aop:3.5.9")
 
     // 2. Web 관련 클래스 사용 (HttpServletRequest, RequestContextHolder 등을 쓰기 위해 필요)
     // 'starter-web' 전체를 가져와도 되지만, 공통 모듈을 가볍게 유지하려면 아래 권장
@@ -33,6 +39,10 @@ dependencies {
     // 4. 테스트용
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+// 메인 클래스가 없으므로 실행 가능한 jar 생성을 끕니다.
+bootJar { enabled = false }
+jar { enabled = true }
 
 tasks.named('test') {
     useJUnitPlatform()
