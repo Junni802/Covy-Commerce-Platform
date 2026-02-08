@@ -44,30 +44,6 @@ public class UserController {
   }
 
   /**
-   * 서비스 헬스 체크 엔드포인트
-   */
-  @GetMapping("/health_check")
-  @Timed(value = "users.status", longTask = true)
-  public String status() {
-    return String.format(
-        "It's Working in User Service, port(local.server.port)=%s, port(server.port)=%s, token secret=%s, token expiration time=%s",
-        env.getProperty("local.server.port"),
-        env.getProperty("server.port"),
-        env.getProperty("jwt.secret"),
-        env.getProperty("jwt.token_expiration_time")
-    );
-  }
-
-  /**
-   * 환영 메시지
-   */
-  @GetMapping("/welcome")
-  @Timed(value = "users.welcome", longTask = true)
-  public String welcome() {
-    return greeting;
-  }
-
-  /**
    * 신규 유저 생성
    */
   @PostMapping("/users")

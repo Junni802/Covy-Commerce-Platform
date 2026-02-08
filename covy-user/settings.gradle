@@ -1,1 +1,3 @@
 rootProject.name = 'covy-user'
+// 2번째 줄 이후: 연동할 모듈들을 나열합니다.
+include 'covy-common'
