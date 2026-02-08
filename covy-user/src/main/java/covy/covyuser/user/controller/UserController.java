@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * User 서비스 REST 컨트롤러
  * <p>
- * - 헬스 체크, 유저 생성, 조회 등 API 제공
+ * 유저 생성, 조회 등 API 제공
  */
 @RestController
 @RequestMapping("/")
@@ -32,9 +32,6 @@ public class UserController {
   private final UserService userService;
   private final Environment env;
   private final ModelMapper modelMapper;
-
-  @Value("${greeting.message}")
-  private String greeting;
 
   public UserController(UserService userService, Environment env) {
     this.userService = userService;
