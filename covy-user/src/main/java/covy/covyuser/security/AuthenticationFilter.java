@@ -2,10 +2,10 @@ package covy.covyuser.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import covy.covyuser.user.dto.UserDto;
+import covy.covyuser.user.dto.response.TokenResponseDto;
 import covy.covyuser.user.service.UserService;
 import covy.covyuser.user.vo.RequestLogin;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,8 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Spring Security Authentication Filter for handling login requests.
  * <p>
- * - Generates Access Token in JSON response body
- * - Sets Refresh Token in HttpOnly, Secure Cookie
+ * - Generates Access Token in JSON response body - Sets Refresh Token in HttpOnly, Secure Cookie
  */
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -76,11 +75,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     UserDto userDetails = userService.getUserDetsByEmail(email);
 
     // 1. 토큰 생성
-    String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
-    String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+    TokenResponseDto tokenResponse = jwtTokenProvider.createTokenResponse(userDetails);
 
     // 2. Access Token 쿠키 생성 (15분)
-    ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+    ResponseCookie accessCookie = ResponseCookie.from("accessToken", tokenResponse.getAccessToken())
         .path("/")
         .httpOnly(true)
         .secure(false) // 로컬 테스트 시 false, 배포 시 true
@@ -89,7 +87,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         .build();
 
     // 3. Refresh Token 쿠키 생성 (7일)
-    ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+    ResponseCookie refreshCookie = ResponseCookie.from("refreshToken",
+            tokenResponse.getRefreshToken())
         .path("/")
         .httpOnly(true)
         .secure(false) // 로컬 테스트 시 false, 배포 시 true
