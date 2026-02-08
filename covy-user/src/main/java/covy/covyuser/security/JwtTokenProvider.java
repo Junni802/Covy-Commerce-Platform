@@ -2,6 +2,7 @@ package covy.covyuser.security;
 
 import covy.covyuser.user.dto.UserDto;
 import covy.covyuser.user.dto.response.TokenResponseDto;
+import covy.covyuser.user.entitiy.RefreshToken;
 import covy.covyuser.user.repository.RefreshTokenRedisRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -64,8 +65,11 @@ public class JwtTokenProvider {
         .compact();
 
     // 3. Redis 저장 (토큰 전체가 아닌 JTI만 저장하여 메모리 최적화)
-    redisRepository.saveRefreshToken(user.getUserId(), jti, REFRESH_TOKEN_VALIDITY_MS);
-
+    redisRepository.save(RefreshToken.builder()
+        .userId(user.getUserId())
+        .jti(jti)
+        .expiration(REFRESH_TOKEN_VALIDITY_MS / 1000) // @TimeToLive는 초(second) 단위입니다.
+        .build());
     return TokenResponseDto.builder()
         .grantType("Bearer")
         .accessToken(accessToken)
@@ -111,6 +115,6 @@ public class JwtTokenProvider {
   }
 
   public void revokeRefreshToken(String userId) {
-    redisRepository.deleteRefreshToken(userId);
+    redisRepository.deleteById(userId);
   }
 }
